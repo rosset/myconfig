@@ -24,6 +24,8 @@ dnf remove *geany* *leafpad* -y
 dnf remove *claws* -y
 dnf remove *asunder* *xfburn* *xfdash* *parole* *pragh* -y
 
+sudo dnf install gimp-data-extras.noarch gimp-save-for-web.x86_64 gimp-lensfun.x86_64 digikam -y
+
 
 # para fazer build do postgresql head
 sudo dnf builddep postgresql
