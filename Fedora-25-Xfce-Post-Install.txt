@@ -5,7 +5,7 @@ dnf install vim-enhanced wget sysstat tig gitk lzop vlc vlc-extras clementine pl
 dnf install kernel-devel -y ; dnf groupinstall "Development Tools" -y ; dnf groupinstall "C Development Tools and Libraries" -y
 dnf groupinstall "RPM Development Tools" -y ; dnf groupinstall "LibreOffice" -y ; dnf groupinstall "Fedora Packager" -y
 
-dnf install dkms libreoffice-langpack-pt-BR.x86_64 unrar unzip gimp gimp-data-extras curl cabextract xorg-x11-font-utils fontconfig filezilla -y
+dnf install dkms libreoffice-langpack-pt-BR.x86_64 unrar unzip gimp gimp-data-extras curl cabextract xorg-x11-font-utils fontconfig filezilla qbrew -y
 
 dnf install gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-base-tools gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-good gstreamer1-plugins-base gstreamer1 gstreamer-plugin-crystalhd gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-free gstreamer-plugins-base-tools gstreamer-plugins-base gstreamer-plugins-espeak gstreamer-plugins-fc gstreamer-plugins-good-extras gstreamer-plugins-good gstreamer-tools gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer-ffmpeg xine-lib-extras xine-lib-extras-freeworld gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg mencoder gstreamer1-libav gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-free gstreamer-plugins-bad-nonfree gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer-plugin-crystalhd gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-extras gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-bad-extras libmpg123 -y
 
@@ -18,17 +18,22 @@ dnf install f25-backgrounds-xfce f25-backgrounds-extras-xfce -y
 dnf install calibre -y
 dnf install fedora-gather-easyfix -y
 
-clean-ups pacotes nao utilizados:
+sudo dnf install gimp-data-extras.noarch gimp-save-for-web.x86_64 gimp-lensfun.x86_64 digikam -y
+sudo dnf install deluge deluge-gtk -y
+
+# para fazer build do postgresql head
+sudo dnf builddep postgresql -y
+
+#btrfs
+#btrfs subvolume snapshot /home /home/snap
+
+#clean-ups pacotes nao utilizados:
 dnf remove *gnumeric* *abiword* -y
 dnf remove *geany* *leafpad* -y
 dnf remove *claws* -y
 dnf remove *asunder* *xfburn* *xfdash* *parole* *pragh* -y
 
-sudo dnf install gimp-data-extras.noarch gimp-save-for-web.x86_64 gimp-lensfun.x86_64 digikam -y
+dnf install xsensors kernel-tools xboxdrv lshw-gui rocket-depot freerdp remmina remmina-plugins-gnome remmina-plugins-rdp remmina-plugins-vnc -y
+dnf install cheese hplip-gui cups-pdf  p7zip byobu screen pigz -y
 
 
-# para fazer build do postgresql head
-sudo dnf builddep postgresql
-
-#btrfs
-btrfs subvolume snapshot /home /home/snap
