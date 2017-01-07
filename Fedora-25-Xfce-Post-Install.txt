@@ -36,4 +36,7 @@ dnf remove *asunder* *xfburn* *xfdash* *parole* *pragh* -y
 dnf install xsensors kernel-tools xboxdrv lshw-gui rocket-depot freerdp remmina remmina-plugins-gnome remmina-plugins-rdp remmina-plugins-vnc -y
 dnf install cheese hplip-gui cups-pdf  p7zip byobu screen pigz -y
 
+dnf install wine winetricks icedtea-web lua-devel -y
 
+#install VirtualBox from rpmfusion
+dnf install VirtualBox -y
