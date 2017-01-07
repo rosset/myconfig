@@ -1,0 +1,12 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.25.13 rosset-laptop
+192.168.25.24 f24
+192.168.25.25 f25
+192.168.25.50 raw
+192.168.25.51 centos5
+192.168.25.52 centos6
+192.168.25.53 centos7
+192.168.25.54 debian7
+192.168.25.55 debian8
+192.168.25.56 sl7
