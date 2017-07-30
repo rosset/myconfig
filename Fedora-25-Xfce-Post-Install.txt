@@ -1,3 +1,7 @@
+#my git config
+git config --global user.email "rosset.filipe@gmail.com"
+git config --global user.name "Filipe Rosset"
+
 dnf update -y
 su -c 'dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm'
 
@@ -13,7 +17,8 @@ dnf groupinstall "Xfce Desktop" -y ; dnf install cmake elementary-xfce-icon-them
 
 dnf install google-chrome-stable_current_x86_64.rpm skypeforlinux-64-alpha.rpm -y
 
-dnf install f25-backgrounds-xfce f25-backgrounds-extras-xfce -y
+#dnf install f25-backgrounds-xfce f25-backgrounds-extras-xfce -y
+dnf install f26-backgrounds-xfce f26-backgrounds-extras-xfce -y
 
 dnf install calibre -y
 dnf install fedora-gather-easyfix -y
@@ -39,4 +44,16 @@ dnf install cheese hplip-gui cups-pdf  p7zip byobu screen pigz -y
 dnf install wine winetricks icedtea-web lua-devel -y
 
 #install VirtualBox from rpmfusion
-dnf install VirtualBox -y
+sudo dnf install VirtualBox -y
+
+sudo dnf install ansible ansible-lint ansible-review ansible-python3 -y
+
+IF=$(ifconfig | grep RUNNING | awk '{ print $1 }' | sed 's/://' | grep -v lo)
+sudo tcpdump -i $IF -n -w- | play --buffer 2500 -r 8000 -b 8 -c 1 -e signed-integer -t raw - band 2k stretch 100 pitch 2000 reverb -w gain +6
+
+
+#Xfce look-and-feel
+sudo sh -c "curl https://raw.githubusercontent.com/Foggalong/hardcode-fixer/master/fix.sh | bash"
+curl https://raw.githubusercontent.com/zangent/GnomeYosemiteIcons/master/download_from_github.sh | sh
+
+
