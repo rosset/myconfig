@@ -1,9 +1,9 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 192.168.1.13 rosset-laptop
-192.168.1.24 f24
-192.168.1.25 f25
+192.168.1.14 rosset-mac
 192.168.1.26 f26
+192.168.1.27 f27
 192.168.1.50 raw
 192.168.1.53 centos7
 192.168.1.55 debian9
