@@ -42,6 +42,7 @@ sudo dnf install xsensors kernel-tools xboxdrv lshw-gui rocket-depot freerdp rem
 sudo dnf install remmina-plugins-rdp remmina-plugins-vnc cheese hplip-gui cups-pdf p7zip byobu screen pigz -y
 sudo dnf install wine winetricks icedtea-web lua-devel -y
 sudo dnf install ansible ansible-lint ansible-review ansible-python3 -y
+sudo dnf install plank plank-docklets elementary-theme-plank arc-theme-plank -y
 
 #Xfce look-and-feel
 sudo sh -c "curl https://raw.githubusercontent.com/Foggalong/hardcode-fixer/master/fix.sh | bash"
@@ -56,8 +57,9 @@ sudo dnf install curl cabextract xorg-x11-font-utils fontconfig filezilla qbrew 
 #install VirtualBox from rpmfusion
 sudo dnf install VirtualBox -y
 
-##sudo dnf install google-chrome-stable_current_x86_64.rpm skypeforlinux-64-alpha.rpm -y
-
 #remove unused packages
 sudo dnf remove *gnumeric* *abiword* *claws* *leafpad* *dragora* -y
 sudo dnf remove *asunder* *xfburn* *xfdash* *parole* *pragh* -y
+
+#install chrome and skype
+sudo dnf install Downloads/google-chrome-stable_current_x86_64.rpm Downloads/skypeforlinux-64.rpm
