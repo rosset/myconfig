@@ -1,59 +1,63 @@
+#update fedora
+sudo dnf update -y
+
+#prepare to migrate to rawhide
+sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-29-primary
+sudo dnf upgrade --refresh
+sudo dnf install dnf-plugin-system-upgrade
+sudo dnf system-upgrade download --refresh --releasever=rawhide
+
+#tools
+sudo dnf install sysstat gitk git tig -y
+
 #my git config
 git config --global user.email "rosset.filipe@gmail.com"
 git config --global user.name "Filipe Rosset"
 
-dnf update -y
+#rpmfusion
 su -c 'dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm'
+sudo dnf update -y
 
-dnf install vim-enhanced wget sysstat tig gitk lzop vlc vlc-extras clementine pluma redshift redshift-gtk xfce-theme-manager hexchat -y
-dnf install kernel-devel -y ; dnf groupinstall "Development Tools" -y ; dnf groupinstall "C Development Tools and Libraries" -y
-dnf groupinstall "RPM Development Tools" -y ; dnf groupinstall "LibreOffice" -y ; dnf groupinstall "Fedora Packager" -y
+#audio & video
+sudo dnf install clementine vlc vlc-extras -y
+sudo dnf install gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-base-tools gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-good gstreamer1-plugins-base gstreamer1 gstreamer-plugin-crystalhd gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-free gstreamer-plugins-base-tools gstreamer-plugins-base gstreamer-plugins-espeak gstreamer-plugins-fc gstreamer-plugins-good-extras gstreamer-plugins-good gstreamer-tools gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer-ffmpeg xine-lib-extras xine-lib-extras-freeworld gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg mencoder gstreamer1-libav gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-free gstreamer-plugins-bad-nonfree gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer-plugin-crystalhd gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-extras gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-bad-extras libmpg123 -y
 
-dnf install dkms libreoffice-langpack-pt-BR.x86_64 unrar unzip gimp gimp-data-extras curl cabextract xorg-x11-font-utils fontconfig filezilla qbrew -y
-
-dnf install gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-base-tools gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-good gstreamer1-plugins-base gstreamer1 gstreamer-plugin-crystalhd gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-free gstreamer-plugins-base-tools gstreamer-plugins-base gstreamer-plugins-espeak gstreamer-plugins-fc gstreamer-plugins-good-extras gstreamer-plugins-good gstreamer-tools gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer-ffmpeg xine-lib-extras xine-lib-extras-freeworld gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg mencoder gstreamer1-libav gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-free gstreamer-plugins-bad-nonfree gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer-plugin-crystalhd gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-extras gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-bad-extras libmpg123 -y
-
-dnf groupinstall "Xfce Desktop" -y ; dnf install cmake elementary-xfce-icon-theme qt5-qtbase-devel -y ; dnf install cmake elementary-xfce-icon-theme snapper sddm sddm-themes sddm-breeze system-switch-displaymanager-gnome gvfs-mtp -y ; dnf install libvpx-devel libvpx -y
-
-dnf install google-chrome-stable_current_x86_64.rpm skypeforlinux-64-alpha.rpm -y
-
-#dnf install f25-backgrounds-xfce f25-backgrounds-extras-xfce -y
-dnf install f26-backgrounds-xfce f26-backgrounds-extras-xfce -y
-
-dnf install calibre -y
-dnf install fedora-gather-easyfix -y
-
-sudo dnf install gimp-data-extras.noarch gimp-save-for-web.x86_64 gimp-lensfun.x86_64 digikam -y
-sudo dnf install deluge deluge-gtk -y
-
-# para fazer build do postgresql head
+#dev
+sudo dnf install cmake kernel-devel qt5-qtbase-devel fedora-gather-easyfix -y
+sudo dnf groupinstall "Development Tools" -y
+sudo dnf groupinstall "C Development Tools and Libraries" -y
+sudo dnf groupinstall "RPM Development Tools" -y
+sudo dnf groupinstall "Fedora Packager" -y
+# to build postgresql head
 sudo dnf builddep postgresql -y
 
-#btrfs
-#btrfs subvolume snapshot /home /home/snap
-
-#clean-ups pacotes nao utilizados:
-dnf remove *gnumeric* *abiword* -y
-dnf remove *geany* *leafpad* -y
-dnf remove *claws* -y
-dnf remove *asunder* *xfburn* *xfdash* *parole* *pragh* -y
-
-dnf install xsensors kernel-tools xboxdrv lshw-gui rocket-depot freerdp remmina remmina-plugins-gnome remmina-plugins-rdp remmina-plugins-vnc -y
-dnf install cheese hplip-gui cups-pdf  p7zip byobu screen pigz -y
-
-dnf install wine winetricks icedtea-web lua-devel -y
-
-#install VirtualBox from rpmfusion
-sudo dnf install VirtualBox -y
-
+#xfce
+sudo dnf groupinstall "Xfce Desktop" -y
+sudo dnf install deluge deluge-gtk -y
+sudo dnf install calibre -y
+sudo dnf install elementary-xfce-icon-theme snapper sddm sddm-themes sddm-breeze system-switch-displaymanager-gnome -y
+sudo dnf gvfs-mtp libvpx-devel libvpx -y
+sudo dnf install f27-backgrounds-xfce f27-backgrounds-extras-xfce -y
+sudo dnf install xsensors kernel-tools xboxdrv lshw-gui rocket-depot freerdp remmina remmina-plugins-gnome -y
+sudo dnf install remmina-plugins-rdp remmina-plugins-vnc cheese hplip-gui cups-pdf p7zip byobu screen pigz -y
+sudo dnf install wine winetricks icedtea-web lua-devel -y
 sudo dnf install ansible ansible-lint ansible-review ansible-python3 -y
-
-IF=$(ifconfig | grep RUNNING | awk '{ print $1 }' | sed 's/://' | grep -v lo)
-sudo tcpdump -i $IF -n -w- | play --buffer 2500 -r 8000 -b 8 -c 1 -e signed-integer -t raw - band 2k stretch 100 pitch 2000 reverb -w gain +6
-
 
 #Xfce look-and-feel
 sudo sh -c "curl https://raw.githubusercontent.com/Foggalong/hardcode-fixer/master/fix.sh | bash"
 curl https://raw.githubusercontent.com/zangent/GnomeYosemiteIcons/master/download_from_github.sh | sh
 
+#utilities
+sudo dnf install lzop vim-enhanced wget pluma redshift redshift-gtk xfce-theme-manager hexchat -y
+sudo dnf groupinstall "LibreOffice" -y
+sudo dnf install dkms libreoffice-langpack-pt-BR unrar unzip gimp gimp-data-extras gimp-save-for-web gimp-lensfun digikam -y
+sudo dnf install curl cabextract xorg-x11-font-utils fontconfig filezilla qbrew -y
 
+#install VirtualBox from rpmfusion
+sudo dnf install VirtualBox -y
+
+##sudo dnf install google-chrome-stable_current_x86_64.rpm skypeforlinux-64-alpha.rpm -y
+
+#remove unused packages
+sudo dnf remove *gnumeric* *abiword* *claws* *leafpad* *dragora* -y
+sudo dnf remove *asunder* *xfburn* *xfdash* *parole* *pragh* -y
