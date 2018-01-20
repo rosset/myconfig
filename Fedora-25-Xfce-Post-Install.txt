@@ -38,7 +38,7 @@ sudo dnf install calibre -y
 sudo dnf install elementary-xfce-icon-theme snapper sddm sddm-themes sddm-breeze system-switch-displaymanager-gnome -y
 sudo dnf gvfs-mtp libvpx-devel libvpx -y
 sudo dnf install f27-backgrounds-xfce f27-backgrounds-extras-xfce -y
-sudo dnf install xsensors kernel-tools xboxdrv lshw-gui rocket-depot freerdp remmina remmina-plugins-gnome -y
+sudo dnf install xsensors kernel-tools xboxdrv lshw-gui rocket-depot freerdp remmina -y
 sudo dnf install remmina-plugins-rdp remmina-plugins-vnc cheese hplip-gui cups-pdf p7zip byobu screen pigz -y
 sudo dnf install wine winetricks icedtea-web lua-devel -y
 sudo dnf install ansible ansible-lint ansible-review ansible-python3 -y
