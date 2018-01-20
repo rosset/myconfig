@@ -63,3 +63,6 @@ sudo dnf remove *asunder* *xfburn* *xfdash* *parole* *pragh* -y
 
 #install chrome and skype
 sudo dnf install Downloads/google-chrome-stable_current_x86_64.rpm Downloads/skypeforlinux-64.rpm
+
+#for mock
+sudo dnf install nosync.i686 nosync.x86_64 -y
