@@ -4,7 +4,7 @@ sudo dnf update -y
 #prepare to migrate to rawhide
 sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-29-primary
 sudo dnf upgrade --refresh
-sudo dnf install dnf-plugin-system-upgrade
+sudo dnf install dnf-plugin-system-upgrade dnf-utils -y
 sudo dnf system-upgrade download --refresh --releasever=rawhide
 
 #tools
