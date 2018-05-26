@@ -1,11 +1,8 @@
+#fedora 28 UP-TO-DATE commands
 #update fedora
+sudo dnf config-manager --set-enabled fedora-updates-testing
 sudo dnf update -y
 
-#prepare to migrate to rawhide
-sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-29-primary
-sudo dnf upgrade --refresh
-sudo dnf install dnf-plugin-system-upgrade dnf-utils -y
-sudo dnf system-upgrade download --refresh --releasever=rawhide
 
 #tools
 sudo dnf install sysstat gitk git tig -y
@@ -14,55 +11,73 @@ sudo dnf install sysstat gitk git tig -y
 git config --global user.email "rosset.filipe@gmail.com"
 git config --global user.name "Filipe Rosset"
 
-#rpmfusion
-su -c 'dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm'
-sudo dnf update -y
+#dev
+sudo dnf groupinstall "Development Tools" -y
+sudo dnf groupinstall "C Development Tools and Libraries" -y
+sudo dnf groupinstall "RPM Development Tools" -y
+sudo dnf groupinstall "Fedora Packager" -y
+sudo dnf install cmake kernel-devel -y
+
+# to build postgresql head (for caiman & handfish builders)
+sudo dnf builddep postgresql valgrind-devel -y
+
+
+#packaging
+#for mock
+sudo dnf install nosync.i686 nosync.x86_64 -y
+
+#rpmfusion stuff
+sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
+sudo dnf config-manager --set-enabled rpmfusion-free-updates-testing
+sudo dnf config-manager --set-enabled rpmfusion-nonfree-updates-testing
+
 
 #audio & video
 sudo dnf install clementine vlc vlc-extras -y
 sudo dnf install gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-base-tools gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-good gstreamer1-plugins-base gstreamer1 gstreamer-plugin-crystalhd gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-free gstreamer-plugins-base-tools gstreamer-plugins-base gstreamer-plugins-espeak gstreamer-plugins-fc gstreamer-plugins-good-extras gstreamer-plugins-good gstreamer-tools gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer-ffmpeg xine-lib-extras xine-lib-extras-freeworld gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg mencoder gstreamer1-libav gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-free gstreamer-plugins-bad-nonfree gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer-plugin-crystalhd gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-extras gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-bad-extras libmpg123 -y
 
-#dev
-sudo dnf install cmake kernel-devel qt5-qtbase-devel fedora-gather-easyfix -y
-sudo dnf groupinstall "Development Tools" -y
-sudo dnf groupinstall "C Development Tools and Libraries" -y
-sudo dnf groupinstall "RPM Development Tools" -y
-sudo dnf groupinstall "Fedora Packager" -y
-# to build postgresql head
-sudo dnf builddep postgresql -y
-
-#xfce
+#xfce + apps
 sudo dnf groupinstall "Xfce Desktop" -y
 sudo dnf install deluge deluge-gtk -y
 sudo dnf install calibre -y
-sudo dnf install elementary-xfce-icon-theme snapper sddm sddm-themes sddm-breeze system-switch-displaymanager-gnome -y
-sudo dnf gvfs-mtp libvpx-devel libvpx -y
-sudo dnf install f27-backgrounds-xfce f27-backgrounds-extras-xfce -y
+sudo dnf install elementary-xfce-icon-theme sddm sddm-themes sddm-breeze system-switch-displaymanager-gnome -y
+sudo dnf install gvfs-mtp libvpx-devel libvpx -y
+sudo dnf install f28-backgrounds-xfce f28-backgrounds-extras-xfce -y
 sudo dnf install xsensors kernel-tools xboxdrv lshw-gui rocket-depot freerdp remmina -y
-sudo dnf install remmina-plugins-rdp remmina-plugins-vnc cheese hplip-gui cups-pdf p7zip byobu screen pigz -y
+sudo dnf install remmina-plugins-rdp remmina-plugins-vnc hplip-gui cups-pdf p7zip byobu screen pigz -y
 sudo dnf install wine winetricks icedtea-web lua-devel -y
 sudo dnf install ansible ansible-lint ansible-review ansible-python3 -y
 sudo dnf install plank plank-docklets elementary-theme-plank arc-theme-plank -y
+
 
 #Xfce look-and-feel
 sudo sh -c "curl https://raw.githubusercontent.com/Foggalong/hardcode-fixer/master/fix.sh | bash"
 curl https://raw.githubusercontent.com/zangent/GnomeYosemiteIcons/master/download_from_github.sh | sh
 
 #utilities
-sudo dnf install lzop vim-enhanced wget pluma redshift redshift-gtk xfce-theme-manager hexchat -y
+sudo dnf install lzop vim-enhanced wget redshift redshift-gtk xfce-theme-manager hexchat -y
 sudo dnf groupinstall "LibreOffice" -y
 sudo dnf install dkms libreoffice-langpack-pt-BR unrar unzip gimp gimp-data-extras gimp-save-for-web gimp-lensfun digikam -y
-sudo dnf install curl cabextract xorg-x11-font-utils fontconfig filezilla qbrew -y
+sudo dnf install curl cabextract xorg-x11-font-utils fontconfig filezilla -y
 
 #install VirtualBox from rpmfusion
 sudo dnf install VirtualBox -y
+
+#install chrome
+sudo dnf install fedora-workstation-repositories -y
+sudo dnf config-manager --set-enabled google-chrome
+sudo dnf install google-chrome-stable -y
+
+#iptv & npm
+sudo dnf install kodi-pvr-iptvsimple npm -y
 
 #remove unused packages
 sudo dnf remove *gnumeric* *abiword* *claws* *leafpad* *dragora* -y
 sudo dnf remove *asunder* *xfburn* *xfdash* *parole* *pragh* -y
 
-#install chrome and skype
-sudo dnf install Downloads/google-chrome-stable_current_x86_64.rpm Downloads/skypeforlinux-64.rpm
 
-#for mock
-sudo dnf install nosync.i686 nosync.x86_64 -y
+#rawhide === prepare to migrate to rawhide (for my VM)
+# sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-29-primary
+# sudo dnf upgrade --refresh
+# sudo dnf install dnf-plugin-system-upgrade dnf-utils -y
+# sudo dnf system-upgrade download --refresh --releasever=rawhide
