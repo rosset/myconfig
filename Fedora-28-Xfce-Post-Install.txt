@@ -1,6 +1,6 @@
 #fedora 28 UP-TO-DATE commands
 #update fedora
-sudo dnf config-manager --set-enabled fedora-updates-testing
+sudo dnf config-manager --set-enabled updates-testing
 sudo dnf update -y
 
 
