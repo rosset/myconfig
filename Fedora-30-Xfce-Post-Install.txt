@@ -3,7 +3,6 @@
 sudo dnf config-manager --set-enabled updates-testing
 sudo dnf update -y
 
-
 #tools
 sudo dnf install sysstat gitk git tig -y
 
@@ -38,12 +37,12 @@ sudo dnf install gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstream
 
 #xfce + apps
 sudo dnf groupinstall "Xfce Desktop" -y
-sudo dnf install deluge deluge-gtk -y
 sudo dnf install calibre -y
+sudo dnf install deluge deluge-gtk rtorrent -y
 sudo dnf install elementary-xfce-icon-theme sddm sddm-themes sddm-breeze system-switch-displaymanager-gnome -y
 sudo dnf install gvfs-mtp libvpx-devel libvpx -y
-sudo dnf install f28-backgrounds-xfce f28-backgrounds-extras-xfce -y
-sudo dnf install xsensors kernel-tools xboxdrv lshw-gui rocket-depot freerdp remmina -y
+sudo dnf install f30-backgrounds-xfce f30-backgrounds-extras-xfce -y
+sudo dnf install xsensors kernel-tools lshw-gui rocket-depot freerdp remmina -y
 sudo dnf install remmina-plugins-rdp remmina-plugins-vnc hplip-gui cups-pdf p7zip byobu screen pigz -y
 sudo dnf install wine winetricks icedtea-web lua-devel -y
 sudo dnf install ansible ansible-lint ansible-review ansible-python3 -y
@@ -55,7 +54,7 @@ sudo sh -c "curl https://raw.githubusercontent.com/Foggalong/hardcode-fixer/mast
 curl https://raw.githubusercontent.com/zangent/GnomeYosemiteIcons/master/download_from_github.sh | sh
 
 #utilities
-sudo dnf install lzop vim-enhanced wget redshift redshift-gtk xfce-theme-manager hexchat -y
+sudo dnf install lzop vim-enhanced wget redshift redshift-gtk hexchat -y
 sudo dnf groupinstall "LibreOffice" -y
 sudo dnf install dkms libreoffice-langpack-pt-BR unrar unzip gimp gimp-data-extras gimp-save-for-web gimp-lensfun digikam -y
 sudo dnf install curl cabextract xorg-x11-font-utils fontconfig filezilla -y
@@ -77,7 +76,7 @@ sudo dnf remove *asunder* *xfburn* *xfdash* *parole* *pragh* -y
 
 
 #rawhide === prepare to migrate to rawhide (for my VM)
-# sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-29-primary
+# sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-31-primary
 # sudo dnf upgrade --refresh
 # sudo dnf install dnf-plugin-system-upgrade dnf-utils -y
 # sudo dnf system-upgrade download --refresh --releasever=rawhide
