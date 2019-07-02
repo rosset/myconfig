@@ -1,53 +1,58 @@
-#fedora 28 UP-TO-DATE commands
-#update fedora
+#Fedora-31-Xfce-Post-Install-Commands by rosset
+
+#enable updates-testing and update your fresh installation
 sudo dnf config-manager --set-enabled updates-testing
 sudo dnf update -y
 
-#tools
-sudo dnf install sysstat gitk git tig -y
+#enable sshd
+sudo systemctl enable sshd
+sudo systemctl restart sshd
+
+#install my tools
+sudo dnf install sysstat gitk git tig screen tmux -y
 
 #my git config
 git config --global user.email "rosset.filipe@gmail.com"
 git config --global user.name "Filipe Rosset"
 
-#dev
+#install dev packages
 sudo dnf groupinstall "Development Tools" -y
 sudo dnf groupinstall "C Development Tools and Libraries" -y
 sudo dnf groupinstall "RPM Development Tools" -y
 sudo dnf groupinstall "Fedora Packager" -y
 sudo dnf install cmake kernel-devel -y
 
-# to build postgresql head (for caiman & handfish builders)
+#install dependencies to build postgresql HEAD (for caiman, handfish & queensnake personal builders)
 sudo dnf builddep postgresql valgrind-devel -y
+sudo dnf install  postgresql valgrind-devel -y
 
-
-#packaging
-#for mock
+#install nosync binaries to speed-up mock builds
 sudo dnf install nosync.i686 nosync.x86_64 -y
 
-#rpmfusion stuff
+#enabling rpmfusion stuff
 sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 sudo dnf config-manager --set-enabled rpmfusion-free-updates-testing
 sudo dnf config-manager --set-enabled rpmfusion-nonfree-updates-testing
 
 
-#audio & video
+#install audio & video apps/plugins
 sudo dnf install clementine vlc vlc-extras -y
 sudo dnf install gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-base-tools gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-good gstreamer1-plugins-base gstreamer1 gstreamer-plugin-crystalhd gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-free gstreamer-plugins-base-tools gstreamer-plugins-base gstreamer-plugins-espeak gstreamer-plugins-fc gstreamer-plugins-good-extras gstreamer-plugins-good gstreamer-tools gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer-ffmpeg xine-lib-extras xine-lib-extras-freeworld gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg mencoder gstreamer1-libav gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-free gstreamer-plugins-bad-nonfree gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer-plugin-crystalhd gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-extras gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-bad-extras libmpg123 -y
 
 #xfce + apps
 sudo dnf groupinstall "Xfce Desktop" -y
-sudo dnf install calibre -y
-sudo dnf install deluge deluge-gtk rtorrent -y
-sudo dnf install elementary-xfce-icon-theme sddm sddm-themes sddm-breeze system-switch-displaymanager-gnome -y
+sudo dnf install calibre deluge deluge-gtk rtorrent -y
+sudo dnf install elementary-xfce-icon-theme system-switch-displaymanager-gnome -y
 sudo dnf install gvfs-mtp libvpx-devel libvpx -y
-sudo dnf install f30-backgrounds-xfce f30-backgrounds-extras-xfce -y
 sudo dnf install xsensors kernel-tools lshw-gui rocket-depot freerdp remmina -y
-sudo dnf install remmina-plugins-rdp remmina-plugins-vnc hplip-gui cups-pdf p7zip byobu screen pigz -y
-sudo dnf install wine winetricks icedtea-web lua-devel -y
+sudo dnf install remmina-plugins-rdp remmina-plugins-vnc hplip-gui cups-pdf p7zip byobu -y
+sudo dnf install icedtea-web lua-devel -y
 sudo dnf install ansible ansible-lint ansible-review ansible-python3 -y
 sudo dnf install plank plank-docklets elementary-theme-plank arc-theme-plank -y
 
+#sudo dnf install sddm sddm-themes sddm-breeze -y
+#sudo dnf install f30-backgrounds-xfce f30-backgrounds-extras-xfce -y
+#sudo dnf install wine winetricks -y
 
 #Xfce look-and-feel
 sudo sh -c "curl https://raw.githubusercontent.com/Foggalong/hardcode-fixer/master/fix.sh | bash"
