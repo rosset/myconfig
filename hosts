@@ -2,9 +2,9 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 192.168.15.13 rosset-laptop
 192.168.15.14 rosset-mac
-192.168.15.28 f28
 192.168.15.29 f29
 192.168.15.30 f30
+192.168.15.31 f31
 192.168.15.50 raw
 192.168.15.53 centos7
 192.168.15.55 debian9
