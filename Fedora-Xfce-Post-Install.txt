@@ -63,6 +63,7 @@ sudo dnf install lzop vim-enhanced wget redshift redshift-gtk hexchat -y
 sudo dnf groupinstall "LibreOffice" -y
 sudo dnf install dkms libreoffice-langpack-pt-BR unrar unzip gimp gimp-data-extras gimp-save-for-web gimp-lensfun digikam -y
 sudo dnf install curl cabextract xorg-x11-font-utils fontconfig filezilla -y
+sudo dnf install xorg-x11-apps perl-LWP-Protocol-https -y
 
 #install VirtualBox from rpmfusion
 sudo dnf install VirtualBox -y
