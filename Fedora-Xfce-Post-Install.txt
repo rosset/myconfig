@@ -45,7 +45,7 @@ sudo dnf install calibre deluge deluge-gtk rtorrent -y
 sudo dnf install elementary-xfce-icon-theme system-switch-displaymanager-gnome -y
 sudo dnf install gvfs-mtp libvpx-devel libvpx -y
 sudo dnf install xsensors kernel-tools lshw-gui rocket-depot freerdp remmina -y
-sudo dnf install remmina-plugins-rdp remmina-plugins-vnc hplip-gui cups-pdf p7zip byobu -y
+sudo dnf install remmina-plugins-rdp remmina-plugins-vnc hplip-gui cups-pdf p7zip p7zip-gui p7zip-plugins byobu -y
 sudo dnf install icedtea-web lua-devel -y
 sudo dnf install ansible ansible-lint ansible-review ansible-python3 -y
 sudo dnf install plank plank-docklets elementary-theme-plank arc-theme-plank -y
