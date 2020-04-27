@@ -1,12 +1,13 @@
-#Fedora-31-Xfce-Post-Install-Commands by rosset
-
-#enable updates-testing and update your fresh installation
-sudo dnf config-manager --set-enabled updates-testing
-sudo dnf update -y
+#Fedora-32-Xfce-Post-Install-Commands by rosset
 
 #enable sshd
 sudo systemctl enable sshd
 sudo systemctl restart sshd
+
+#enable updates-testing and update your fresh installation
+sudo dnf config-manager --set-enabled updates-testing
+sudo dnf update -y
+sudo reboot
 
 #install my tools
 sudo dnf install sysstat gitk git tig screen tmux -y
@@ -23,8 +24,10 @@ sudo dnf groupinstall "Fedora Packager" -y
 sudo dnf install cmake kernel-devel -y
 
 #install dependencies to build postgresql HEAD (for caiman, handfish & queensnake personal builders)
-sudo dnf builddep postgresql valgrind-devel -y
-sudo dnf install  postgresql valgrind-devel -y
+sudo dnf builddep -y postgresql
+sudo dnf install  -y postgresql valgrind perl-LWP-Protocol-https
+#for f33
+#sudo dnf install -y perl-LWP-Protocol-https perl-FindBin perl-Opcode
 
 #install nosync binaries to speed-up mock builds
 sudo dnf install nosync.i686 nosync.x86_64 -y
@@ -37,21 +40,32 @@ sudo dnf config-manager --set-enabled rpmfusion-nonfree-updates-testing
 
 #install audio & video apps/plugins
 sudo dnf install clementine vlc vlc-extras -y
-sudo dnf install gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-base-tools gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-good gstreamer1-plugins-base gstreamer1 gstreamer-plugin-crystalhd gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-free gstreamer-plugins-base-tools gstreamer-plugins-base gstreamer-plugins-espeak gstreamer-plugins-fc gstreamer-plugins-good-extras gstreamer-plugins-good gstreamer-tools gstreamer1-libav gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer-ffmpeg xine-lib-extras xine-lib-extras-freeworld gstreamer-plugins-bad gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg mencoder gstreamer1-libav gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-free gstreamer-plugins-bad-nonfree gstreamer1-plugins-good gstreamer1-plugins-ugly gstreamer1-plugins-bad-free gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer-plugin-crystalhd gstreamer-ffmpeg gstreamer-plugins-good gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-bad-extras gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras gstreamer-plugins-bad-nonfree gstreamer-plugins-bad-extras libmpg123 -y
+
+# libs gtreamer
+sudo dnf install -y gstreamer-plugin-crystalhd
+sudo dnf install -y gstreamer-plugins-espeak
+sudo dnf install -y gstreamer-plugins-base-tools
+sudo dnf install -y gstreamer1-libav
+sudo dnf install -y gstreamer1-plugins-bad-free-extras
+sudo dnf install -y gstreamer1-plugins-bad-freeworld
+sudo dnf install -y gstreamer1-plugins-base-tools
+sudo dnf install -y gstreamer1-plugins-good-extras
+sudo dnf install -y gstreamer1-plugins-ugly
+sudo dnf install -y libmpg123 mencoder xine-lib-extras xine-lib-extras-freeworld
 
 #xfce + apps
 sudo dnf groupinstall "Xfce Desktop" -y
-sudo dnf install calibre deluge deluge-gtk rtorrent -y
-sudo dnf install elementary-xfce-icon-theme system-switch-displaymanager-gnome -y
-sudo dnf install gvfs-mtp libvpx-devel libvpx -y
-sudo dnf install xsensors kernel-tools lshw-gui rocket-depot freerdp remmina -y
-sudo dnf install remmina-plugins-rdp remmina-plugins-vnc hplip-gui cups-pdf p7zip p7zip-gui p7zip-plugins byobu -y
-sudo dnf install icedtea-web lua-devel -y
-sudo dnf install ansible ansible-lint ansible-review ansible-python3 -y
-sudo dnf install plank plank-docklets elementary-theme-plank arc-theme-plank -y
+sudo dnf install -y calibre deluge deluge-gtk rtorrent
+sudo dnf install -y gvfs-mtp libvpx-devel libvpx
+sudo dnf install -y xsensors lshw-gui kernel-tools
+sudo dnf install -y freerdp remmina remmina-plugins-rdp remmina-plugins-vnc
+sudo dnf install -y byobu hplip-gui cups-pdf p7zip p7zip-gui p7zip-plugins
+sudo dnf install -y icedtea-web lua-devel
+sudo dnf install -y ansible python3-ansible-lint ansible-python3
+sudo dnf install -y plank plank-docklets elementary-theme-plank arc-theme-plank elementary-xfce-icon-theme
+sudo dnf install -y f32-backgrounds-xfce f32-backgrounds-extras-xfce
 
 #sudo dnf install sddm sddm-themes sddm-breeze -y
-#sudo dnf install f30-backgrounds-xfce f30-backgrounds-extras-xfce -y
 #sudo dnf install wine winetricks -y
 
 #Xfce look-and-feel
@@ -59,27 +73,26 @@ sudo sh -c "curl https://raw.githubusercontent.com/Foggalong/hardcode-fixer/mast
 curl https://raw.githubusercontent.com/zangent/GnomeYosemiteIcons/master/download_from_github.sh | sh
 
 #utilities
-sudo dnf install lzop vim-enhanced wget redshift redshift-gtk hexchat -y
 sudo dnf groupinstall "LibreOffice" -y
-sudo dnf install dkms libreoffice-langpack-pt-BR unrar unzip gimp gimp-data-extras gimp-save-for-web gimp-lensfun digikam -y
-sudo dnf install curl cabextract xorg-x11-font-utils fontconfig filezilla -y
-sudo dnf install xorg-x11-apps perl-LWP-Protocol-https -y
+sudo dnf install -y hexchat lzop redshift redshift-gtk vim-enhanced wget
+sudo dnf install -y dkms libreoffice-langpack-pt-BR unrar unzip
+#sudo dnf install -y gimp gimp-data-extras gimp-save-for-web gimp-lensfun
+sudo dnf install -y curl cabextract xorg-x11-font-utils fontconfig filezilla xorg-x11-apps
 
 #install VirtualBox from rpmfusion
-sudo dnf install VirtualBox -y
+#sudo dnf install VirtualBox -y
 
 #install chrome
-sudo dnf install fedora-workstation-repositories -y
+sudo dnf install -y fedora-workstation-repositories
 sudo dnf config-manager --set-enabled google-chrome
-sudo dnf install google-chrome-stable -y
+sudo dnf install -y google-chrome-stable
 
 #iptv & npm
-sudo dnf install kodi-pvr-iptvsimple npm -y
+sudo dnf install -y kodi-pvr-iptvsimple npm
 
 #remove unused packages
-sudo dnf remove *gnumeric* *abiword* *claws* *leafpad* *dragora* -y
-sudo dnf remove *asunder* *xfburn* *xfdash* *parole* *pragh* -y
-
+sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora*
+sudo dnf remove -y *asunder* *xfburn* *xfdash* *parole* *pragh*
 
 #rawhide === prepare to migrate to rawhide (for my VM)
 # sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-31-primary
