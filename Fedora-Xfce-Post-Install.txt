@@ -1,4 +1,4 @@
-#Fedora-32-Xfce-Post-Install-Commands by rosset
+#Fedora-33-Xfce-Post-Install-Commands by rosset
 
 #enable sshd
 sudo systemctl enable sshd
@@ -25,9 +25,7 @@ sudo dnf install cmake kernel-devel -y
 
 #install dependencies to build postgresql HEAD (for caiman, handfish & queensnake personal builders)
 sudo dnf builddep -y postgresql
-sudo dnf install  -y postgresql valgrind perl-LWP-Protocol-https
-#for f33
-#sudo dnf install -y perl-LWP-Protocol-https perl-FindBin perl-Opcode
+sudo dnf install  -y postgresql valgrind perl-LWP-Protocol-https perl-FindBin perl-Opcode
 
 #install nosync binaries to speed-up mock builds
 sudo dnf install nosync.i686 nosync.x86_64 -y
@@ -63,7 +61,7 @@ sudo dnf install -y byobu hplip-gui cups-pdf p7zip p7zip-gui p7zip-plugins
 sudo dnf install -y icedtea-web lua-devel
 sudo dnf install -y ansible python3-ansible-lint ansible-python3
 sudo dnf install -y plank plank-docklets elementary-theme-plank arc-theme-plank elementary-xfce-icon-theme
-sudo dnf install -y f32-backgrounds-xfce f32-backgrounds-extras-xfce
+sudo dnf install -y f33-backgrounds-xfce f33-backgrounds-extras-xfce
 
 #sudo dnf install sddm sddm-themes sddm-breeze -y
 #sudo dnf install wine winetricks -y
@@ -93,6 +91,9 @@ sudo dnf install -y kodi-pvr-iptvsimple npm
 #remove unused packages
 sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora*
 sudo dnf remove -y *asunder* *xfburn* *xfdash* *parole* *pragh*
+
+# make sure writer is installed
+sudo dnf install libreoffice-writer -y
 
 #rawhide === prepare to migrate to rawhide (for my VM)
 # sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-31-primary
