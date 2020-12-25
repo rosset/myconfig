@@ -91,6 +91,7 @@ sudo dnf install -y kodi-pvr-iptvsimple npm
 #remove unused packages
 sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora*
 sudo dnf remove -y *asunder* *xfburn* *xfdash* *parole* *pragh*
+sudo dnf remove -y nano-default-editor
 
 # make sure writer is installed
 sudo dnf install libreoffice-writer -y
