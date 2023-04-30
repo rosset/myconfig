@@ -1,4 +1,4 @@
-#Fedora-33-Xfce-Post-Install-Commands by rosset
+#Fedora-37-Xfce-Post-Install-Commands by rosset
 
 #enable sshd
 sudo systemctl enable sshd
@@ -24,8 +24,8 @@ sudo dnf groupinstall "Fedora Packager" -y
 sudo dnf install cmake kernel-devel -y
 
 #install dependencies to build postgresql HEAD (for caiman, handfish & queensnake personal builders)
-sudo dnf builddep -y postgresql
-sudo dnf install  -y postgresql valgrind perl-LWP-Protocol-https perl-FindBin perl-Opcode
+# sudo dnf builddep -y postgresql
+# sudo dnf install  -y postgresql valgrind perl-LWP-Protocol-https perl-FindBin perl-Opcode
 
 #install nosync binaries to speed-up mock builds
 sudo dnf install nosync.i686 nosync.x86_64 -y
@@ -42,7 +42,6 @@ sudo dnf install clementine vlc vlc-extras -y
 # libs gtreamer
 sudo dnf install -y gstreamer-plugin-crystalhd
 sudo dnf install -y gstreamer-plugins-espeak
-sudo dnf install -y gstreamer-plugins-base-tools
 sudo dnf install -y gstreamer1-libav
 sudo dnf install -y gstreamer1-plugins-bad-free-extras
 sudo dnf install -y gstreamer1-plugins-bad-freeworld
@@ -58,10 +57,10 @@ sudo dnf install -y gvfs-mtp libvpx-devel libvpx
 sudo dnf install -y xsensors lshw-gui kernel-tools
 sudo dnf install -y freerdp remmina remmina-plugins-rdp remmina-plugins-vnc
 sudo dnf install -y byobu hplip-gui cups-pdf p7zip p7zip-gui p7zip-plugins
-sudo dnf install -y icedtea-web lua-devel
-sudo dnf install -y ansible python3-ansible-lint ansible-python3
-sudo dnf install -y plank plank-docklets elementary-theme-plank arc-theme-plank elementary-xfce-icon-theme
-sudo dnf install -y f33-backgrounds-xfce f33-backgrounds-extras-xfce
+sudo dnf install -y lua-devel
+sudo dnf install -y ansible python3-ansible-lint
+sudo dnf install -y plank plank-docklets arc-theme-plank elementary-xfce-icon-theme
+sudo dnf install -y f37-backgrounds-xfce f37-backgrounds-extras-xfce
 
 #sudo dnf install sddm sddm-themes sddm-breeze -y
 #sudo dnf install wine winetricks -y
@@ -75,7 +74,7 @@ sudo dnf groupinstall "LibreOffice" -y
 sudo dnf install -y hexchat lzop redshift redshift-gtk vim-enhanced wget
 sudo dnf install -y dkms libreoffice-langpack-pt-BR unrar unzip
 #sudo dnf install -y gimp gimp-data-extras gimp-save-for-web gimp-lensfun
-sudo dnf install -y curl cabextract xorg-x11-font-utils fontconfig filezilla xorg-x11-apps
+sudo dnf install -y curl cabextract xorg-x11-font-utils fontconfig filezilla
 
 #install VirtualBox from rpmfusion
 #sudo dnf install VirtualBox -y
@@ -88,12 +87,14 @@ sudo dnf install -y google-chrome-stable
 #iptv & npm
 sudo dnf install -y kodi-pvr-iptvsimple npm
 
+sudo dnf install vim-default-editor -y
+
 #remove unused packages
 sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora*
 sudo dnf remove -y *asunder* *xfburn* *xfdash* *parole* *pragh*
 sudo dnf remove -y nano-default-editor
 
-# make sure writer is installed
+# make sure only writer is installed
 sudo dnf install libreoffice-writer -y
 
 #rawhide === prepare to migrate to rawhide (for my VM)
