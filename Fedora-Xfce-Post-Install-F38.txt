@@ -1,8 +1,7 @@
-#Fedora-37-Xfce-Post-Install-Commands by rosset
+#Fedora-38-Xfce-Post-Install-Commands by rosset
 
 #enable sshd
-sudo systemctl enable sshd
-sudo systemctl restart sshd
+sudo systemctl enable sshd --now
 
 #enable updates-testing and update your fresh installation
 sudo dnf config-manager --set-enabled updates-testing
@@ -48,7 +47,7 @@ sudo dnf install -y gstreamer1-plugins-bad-freeworld
 sudo dnf install -y gstreamer1-plugins-base-tools
 sudo dnf install -y gstreamer1-plugins-good-extras
 sudo dnf install -y gstreamer1-plugins-ugly
-sudo dnf install -y libmpg123 mencoder xine-lib-extras xine-lib-extras-freeworld
+# sudo dnf install -y libmpg123 mencoder xine-lib-extras xine-lib-extras-freeworld
 
 #xfce + apps
 sudo dnf groupinstall "Xfce Desktop" -y
@@ -60,7 +59,7 @@ sudo dnf install -y byobu hplip-gui cups-pdf p7zip p7zip-gui p7zip-plugins
 sudo dnf install -y lua-devel
 sudo dnf install -y ansible python3-ansible-lint
 sudo dnf install -y plank plank-docklets arc-theme-plank elementary-xfce-icon-theme
-sudo dnf install -y f37-backgrounds-xfce f37-backgrounds-extras-xfce
+sudo dnf install -y f38-backgrounds-xfce f38-backgrounds-extras-xfce
 
 #sudo dnf install sddm sddm-themes sddm-breeze -y
 #sudo dnf install wine winetricks -y
@@ -85,7 +84,8 @@ sudo dnf config-manager --set-enabled google-chrome
 sudo dnf install -y google-chrome-stable
 
 #iptv & npm
-sudo dnf install -y kodi-pvr-iptvsimple npm
+# sudo dnf install -y kodi-pvr-iptvsimple npm
+sudo dnf install npm -y
 
 #remove unused packages
 sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora*
