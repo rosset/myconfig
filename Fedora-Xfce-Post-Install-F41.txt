@@ -1,0 +1,115 @@
+# Fedora-41-Xfce-Post-Install-Commands by rosset
+
+# enable sshd
+sudo systemctl enable sshd --now
+
+# configure xrdp
+sudo dnf -y install xrdp tigervnc-server
+sudo systemctl enable --now xrdp
+sudo firewall-cmd --add-port=3389/tcp
+sudo firewall-cmd --runtime-to-permanent
+
+# update your fresh installation
+sudo dnf update -y
+sudo reboot
+
+# install my tools
+sudo dnf install -y sysstat gitk git tig screen tmux
+
+# set my git config
+git config --global user.email "rosset.filipe@gmail.com"
+git config --global user.name "Filipe Rosset"
+
+# install dev packages
+sudo dnf group install -y "c-development"
+sudo dnf group install -y "cloud-infrastructure"
+sudo dnf group install -y "cloud-management"
+sudo dnf group install -y "container-management"
+sudo dnf group install -y "development-tools"
+sudo dnf group install -y "rpm-development-tools"
+sudo dnf group install -y "system-tools"
+sudo dnf install -y cmake fedora-packager fedora-easy-karma kernel-devel 
+sudo dnf install -y kernel-tools valgrind perl-LWP-Protocol-https nosync
+sudo dnf install -y perl-FindBin perl-Opcode
+
+# remove unused packages
+sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora*
+sudo dnf remove -y *asunder* *xfburn* *xfdash* *parole* *pragh*
+sudo dnf remove -y nano-default-editor
+
+#install audio & video apps/plugins
+sudo dnf install -y clementine vlc vlc-extras
+
+# libs gtreamer
+sudo dnf install -y gstreamer-plugin-crystalhd
+sudo dnf install -y gstreamer-plugins-espeak
+sudo dnf install -y gstreamer1-libav
+sudo dnf install -y gstreamer1-plugins-bad-free-extras
+sudo dnf install -y gstreamer1-plugins-bad-freeworld
+sudo dnf install -y gstreamer1-plugins-base-tools
+sudo dnf install -y gstreamer1-plugins-good-extras
+sudo dnf install -y gstreamer1-plugins-ugly
+
+# Xfce + apps
+sudo dnf install -y qbittorrent rtorrent elementary-xfce-icon-theme
+sudo dnf install -y calibre p7zip p7zip-gui p7zip-plugins 
+sudo dnf install -y f41-backgrounds-xfce f40-backgrounds-extras-xfce
+
+# setup rpm fusion repositories
+sudo dnf config-manager setopt fedora-cisco-openh264.enabled=1
+
+sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+sudo dnf install -y https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+sudo dnf config-manager setopt rpmfusion-free.enabled=1
+sudo dnf config-manager setopt rpmfusion-free-updates.enabled=1
+sudo dnf config-manager setopt rpmfusion-free-updates-testing.enabled=1
+sudo dnf config-manager setopt rpmfusion-nonfree.enabled=1
+sudo dnf config-manager setopt rpmfusion-nonfree-updates.enabled=1
+sudo dnf config-manager setopt rpmfusion-nonfree-updates-testing.enabled=1
+
+
+#install chrome
+sudo dnf install -y fedora-workstation-repositories
+sudo dnf config-manager setopt google-chrome.enabled=1
+sudo dnf install -y google-chrome-stable
+
+# install vim as default editor
+sudo dnf install vim-default-editor default-editor -y
+
+# make sure only writer is installed
+sudo dnf install libreoffice-writer -y
+
+# utilities
+sudo dnf -y install telegram-desktop
+sudo dnf group install "libreoffice" -y
+sudo dnf install -y hexchat lzop redshift redshift-gtk vim-enhanced wget
+sudo dnf install -y dkms filezilla unrar unzip nosync
+sudo dnf install -y curl cabextract xorg-x11-font-utils fontconfig 
+sudo dnf install -y wireshark wireshark-cli htop iotop nautilus
+sudo dnf install -y rpkg rpkg-common rpkg-macros python3-rpkg
+
+# install vscode
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.repos.d/vscode.repo > /dev/null
+sudo dnf check-update
+sudo dnf install -y code
+
+
+VBoxManage startvm "Fedora-39" --type headless
+sleep 15  # Wait 15 seconds
+
+VBoxManage startvm "Fedora-40" --type headless
+sleep 15  # Wait 15 seconds
+
+VBoxManage startvm "rawhide" --type headless
+sleep 15  # Wait 15 seconds
+
+VBoxManage startvm "OL9-2024-Aug" --type headless
+sleep 15  # Wait 15 seconds
+
+VBoxManage startvm "Win11" --type headless
+sleep 15  # Wait 15 seconds
+
+
+
