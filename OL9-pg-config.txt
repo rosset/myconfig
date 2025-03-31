@@ -1,0 +1,9 @@
+# pre-reqs
+sudo dnf install -y oracle-epel-release-el9
+sudo dnf install -y kernel-tools valgrind perl-LWP-Protocol-https perl-Opcode
+sudo dnf install -y rsync gcc gcc-c++ make meson ccache perl-FindBin
+sudo dnf install -y sysstat gitk git tig screen tmux vim-enhanced
+sudo dnf groupinstall "Xfce" -y
+sudo dnf groupinstall "Fedora Packager" -y
+sudo dnf update -y
+
