@@ -39,6 +39,7 @@ rpkg rpkg-common rpkg-macros python3-rpkg
 
 
 # remove unused packages
-# sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora*
-# sudo dnf remove -y *asunder* *xfburn* *xfdash* *parole* *pragh*
-# sudo dnf remove -y nano-default-editor
+# sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora* *pragh*  \
+# *asunder* *xfburn* *xfdash* *parole* nano-default-editor orca
+
+
