@@ -1,0 +1,44 @@
+# Fedora-44-Xfce-Post-Install-Commands by rosset
+
+
+# enable sshd
+sudo systemctl enable sshd --now
+
+
+# install my stuff
+sudo dnf install -y vlc qbittorrent rtorrent p7zip p7zip-gui calibre redshift  \
+redshift-gtk libreoffice-writer vim-default-editor default-editor hexchat lzop \
+vim-enhanced wget dkms filezilla unrar unzip nosync curl cabextract fontconfig \
+xorg-x11-font-utils wireshark-cli htop iotop sysstat gitk git tig screen tmux  \
+wireshark
+
+
+# update your fresh installation
+sudo dnf update -y
+sudo reboot
+
+
+# install dev packages & group packages
+sudo dnf group install -y "c-development"
+sudo dnf group install -y "cloud-infrastructure"
+sudo dnf group install -y "cloud-management"
+sudo dnf group install -y "container-management"
+sudo dnf group install -y "development-tools"
+sudo dnf group install -y "rpm-development-tools"
+sudo dnf group install -y "system-tools"
+sudo dnf group install "libreoffice" -y
+
+# for postgresql buildfarm
+sudo dnf install -y perl-FindBin perl-IPC-Run perl-Opcode perl-Test-Simple     \
+perl-LWP-Protocol-https 
+
+
+# fedora packaging stuff
+sudo dnf install -y valgrind nosync cmake fedora-packager fedora-easy-karma    \
+rpkg rpkg-common rpkg-macros python3-rpkg
+
+
+# remove unused packages
+# sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora*
+# sudo dnf remove -y *asunder* *xfburn* *xfdash* *parole* *pragh*
+# sudo dnf remove -y nano-default-editor
