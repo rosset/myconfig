@@ -1,5 +1,6 @@
 # OL10-Post-Install by rosset
 
+
 # enable sshd
 sudo systemctl enable sshd --now
 
@@ -28,15 +29,16 @@ perl-Opcode perl-Test-Simple
 
 
 # fedora packaging stuff
-sudo dnf install -y cmake python3-rpkg rpkg-common valgrind
+sudo dnf install -y cmake meson python3-rpkg rpkg-common valgrind
+
 
 # debug tools
 sudo dnf install crash kexec-tools -y
 sudo kdumpctl reset-crashkernel
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 
+
 # optional
 # sudo dnf install kernel-debug* -y
 # sudo dnf install kernel-debug-uek* -y
-
 

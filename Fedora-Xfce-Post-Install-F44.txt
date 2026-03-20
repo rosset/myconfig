@@ -29,6 +29,7 @@ sudo dnf group install -y "rpm-development-tools"
 sudo dnf group install -y "system-tools"
 sudo dnf group install "libreoffice" -y
 
+
 # for postgresql buildfarm
 sudo dnf builddep postgresql -y
 sudo dnf install -y perl-FindBin perl-IPC-Run perl-LWP-Protocol-https \
@@ -36,7 +37,7 @@ perl-Opcode perl-Test-Simple
 
 
 # fedora packaging stuff
-sudo dnf install -y cmake fedora-easy-karma fedora-packager nosync \
+sudo dnf install -y cmake fedora-easy-karma fedora-packager meson nosync \
 python3-rpkg rpkg rpkg-common rpkg-macros valgrind
 
 
@@ -45,11 +46,12 @@ sudo dnf install crash kexec-tools -y
 sudo kdumpctl reset-crashkernel
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 
+
 # optional
 # sudo dnf install kernel-debug* -y
+
 
 # remove unused packages
 # sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora* *pragh* \
 # *asunder* *xfburn* *xfdash* *parole* nano-default-editor orca
-
 
