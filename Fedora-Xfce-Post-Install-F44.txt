@@ -6,11 +6,12 @@ sudo systemctl enable sshd --now
 
 
 # install my stuff
-sudo dnf install -y vlc qbittorrent rtorrent p7zip p7zip-gui calibre redshift  \
-redshift-gtk libreoffice-writer vim-default-editor default-editor hexchat lzop \
-vim-enhanced wget dkms filezilla unrar unzip nosync curl cabextract fontconfig \
-xorg-x11-font-utils wireshark-cli htop iotop sysstat gitk git tig screen tmux  \
-wireshark
+sudo dnf install -y \
+cabextract calibre curl default-editor dkms filezilla fontconfig git gitk \
+hexchat htop iotop libreoffice-writer lzop nosync qbittorrent redshift \
+redshift-gtk rtorrent screen sysstat tig tmux unrar unzip \
+vim-default-editor vim-enhanced vlc wget wireshark wireshark-cli \
+xorg-x11-font-utils zstd
 
 
 # update your fresh installation
@@ -29,17 +30,26 @@ sudo dnf group install -y "system-tools"
 sudo dnf group install "libreoffice" -y
 
 # for postgresql buildfarm
-sudo dnf install -y perl-FindBin perl-IPC-Run perl-Opcode perl-Test-Simple     \
-perl-LWP-Protocol-https 
+sudo dnf builddep postgresql -y
+sudo dnf install -y perl-FindBin perl-IPC-Run perl-LWP-Protocol-https \
+perl-Opcode perl-Test-Simple
 
 
 # fedora packaging stuff
-sudo dnf install -y valgrind nosync cmake fedora-packager fedora-easy-karma    \
-rpkg rpkg-common rpkg-macros python3-rpkg
+sudo dnf install -y cmake fedora-easy-karma fedora-packager nosync \
+python3-rpkg rpkg rpkg-common rpkg-macros valgrind
 
+
+# debug tools
+sudo dnf install crash kexec-tools -y
+sudo kdumpctl reset-crashkernel
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+
+# optional
+# sudo dnf install kernel-debug* -y
 
 # remove unused packages
-# sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora* *pragh*  \
+# sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora* *pragh* \
 # *asunder* *xfburn* *xfdash* *parole* nano-default-editor orca
 
 
