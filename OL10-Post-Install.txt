@@ -1,0 +1,42 @@
+# OL10-Post-Install by rosset
+
+# enable sshd
+sudo systemctl enable sshd --now
+
+
+# install my stuff
+sudo dnf install -y cabextract curl dkms filezilla fontconfig git gitk htop    \
+iotop screen sysstat tig tmux unrar unzip vim-enhanced wget2 wireshark         \
+wireshark-cli xorg-x11-font-utils zstd
+
+
+# update your fresh installation
+sudo dnf update -y
+sudo reboot
+
+
+# install dev packages & group packages
+sudo dnf group install "Development Tools" -y
+sudo dnf group install "RPM Development Tools" -y
+sudo dnf group install "System Tools" -y
+
+
+# for postgresql buildfarm
+sudo dnf builddep postgresql -y
+sudo dnf install -y perl-FindBin perl-IPC-Run perl-LWP-Protocol-https          \
+perl-Opcode perl-Test-Simple
+
+
+# fedora packaging stuff
+sudo dnf install -y cmake python3-rpkg rpkg-common valgrind
+
+# debug tools
+sudo dnf install crash kexec-tools -y
+sudo kdumpctl reset-crashkernel
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+
+# optional
+# sudo dnf install kernel-debug* -y
+# sudo dnf install kernel-debug-uek* -y
+
+
