@@ -45,6 +45,8 @@ python3-rpkg rpkg rpkg-common rpkg-macros valgrind
 sudo dnf install crash kexec-tools -y
 sudo kdumpctl reset-crashkernel
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+sudo systemctl enable kdump --now
+sudo kdumpctl status
 
 
 # optional

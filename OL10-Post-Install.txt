@@ -36,6 +36,8 @@ sudo dnf install -y cmake meson python3-rpkg rpkg-common valgrind
 sudo dnf install crash kexec-tools -y
 sudo kdumpctl reset-crashkernel
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+sudo systemctl enable kdump --now
+sudo kdumpctl status
 
 
 # optional
