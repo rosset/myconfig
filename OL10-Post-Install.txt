@@ -24,8 +24,9 @@ sudo dnf group install "System Tools" -y
 
 # for postgresql buildfarm
 sudo dnf builddep postgresql -y
-sudo dnf install -y perl-FindBin perl-IPC-Run perl-LWP-Protocol-https          \
-perl-Opcode perl-Test-Simple
+sudo dnf install -y dtrace dtrace-devel dtrace-testsuite \
+perl-FindBin perl-IPC-Run perl-LWP-Protocol-https perl-Opcode \
+perl-Test-Simple uuid-devel
 
 
 # fedora packaging stuff
