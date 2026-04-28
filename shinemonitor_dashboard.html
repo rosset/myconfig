@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShineMonitor · Power Station Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  /* ─── Design tokens ─────────────────────────────────────────────── */
+  :root {
+    --bg:          #07080d;
+    --surface:     #0e101a;
+    --surface2:    #151825;
+    --border:      #1f2437;
+    --border2:     #2a3050;
+    --amber:       #f6a01a;
+    --amber-dim:   #b87310;
+    --amber-glow:  rgba(246,160,26,0.12);
+    --amber-glow2: rgba(246,160,26,0.06);
+    --green:       #22d3a5;
+    --green-dim:   rgba(34,211,165,0.15);
+    --red:         #f43f5e;
+    --red-dim:     rgba(244,63,94,0.15);
+    --text:        #e8eaf2;
+    --text-dim:    #6b738f;
+    --text-mid:    #9ba3c0;
+    --mono:        'Space Mono', monospace;
+    --sans:        'Syne', sans-serif;
+    --radius:      10px;
+    --radius-lg:   16px;
+  }
+
+  /* ─── Reset ─────────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 15px; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(246,160,26,0.07) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, var(--border) 39px, var(--border) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, var(--border) 39px, var(--border) 40px);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+  }
+
+  /* ─── Layout ─────────────────────────────────────────────────────── */
+  .shell {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
+
+  /* ─── Header ─────────────────────────────────────────────────────── */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 36px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: var(--amber);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 24px rgba(246,160,26,0.35);
+  }
+  .logo-icon svg { width: 24px; height: 24px; }
+  .header-text h1 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+  .header-text p {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .header-badge {
+    margin-left: auto;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid rgba(34,211,165,0.25);
+    display: none;
+  }
+  .header-badge.show { display: inline-block; }
+
+  /* ─── Cards ──────────────────────────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border2), transparent);
+  }
+  .card-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ─── Login panel ────────────────────────────────────────────────── */
+  #login-panel {
+    max-width: 480px;
+    margin: 60px auto;
+  }
+  #login-panel h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  #login-panel p {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+    font-family: var(--mono);
+    line-height: 1.6;
+  }
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    margin-bottom: 6px;
+  }
+  .field input, .field select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field input:focus, .field select:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px var(--amber-glow);
+  }
+
+  /* ─── Button ─────────────────────────────────────────────────────── */
+  .btn {
+    background: var(--amber);
+    color: #0a0800;
+    border: none;
+    border-radius: var(--radius);
+    padding: 11px 24px;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 0 20px rgba(246,160,26,0.3);
+    width: 100%;
+  }
+  .btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 0 28px rgba(246,160,26,0.5); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-sm {
+    width: auto;
+    padding: 7px 16px;
+    font-size: 0.7rem;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-mid);
+    border: 1px solid var(--border2);
+    box-shadow: none;
+  }
+  .btn-ghost:hover { border-color: var(--amber); color: var(--amber); box-shadow: none; }
+
+  /* ─── Error / status ─────────────────────────────────────────────── */
+  .alert {
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    margin-top: 14px;
+    display: none;
+    line-height: 1.5;
+  }
+  .alert.err  { background: var(--red-dim);   color: var(--red);   border: 1px solid rgba(244,63,94,0.25); }
+  .alert.info { background: var(--amber-glow); color: var(--amber); border: 1px solid rgba(246,160,26,0.2); }
+  .alert.ok   { background: var(--green-dim);  color: var(--green); border: 1px solid rgba(34,211,165,0.25); }
+  .alert.show { display: block; }
+
+  /* ─── Dashboard ──────────────────────────────────────────────────── */
+  #dashboard { display: none; }
+  #dashboard.show { display: block; }
+
+  /* Plant selector row */
+  .selector-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .selector-row .field {
+    margin-bottom: 0;
+    flex: 1;
+    min-width: 200px;
+  }
+  .selector-row .field select { width: 100%; }
+
+  /* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: var(--border2); }
+  .stat-card .s-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .stat-card .s-value {
+    font-family: var(--mono);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--amber);
+    line-height: 1;
+    transition: color 0.3s;
+  }
+  .stat-card .s-unit {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-left: 4px;
+  }
+  .stat-card .s-sub {
+    font-size: 0.7rem;
+    color: var(--text-mid);
+    margin-top: 6px;
+    font-family: var(--mono);
+  }
+  .stat-card.green .s-value { color: var(--green); }
+  .stat-card.neutral .s-value { color: var(--text); }
+  .stat-card .s-glow {
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--amber-glow2);
+    filter: blur(20px);
+    pointer-events: none;
+  }
+  .stat-card.green .s-glow { background: rgba(34,211,165,0.06); }
+
+  /* Two-column layout */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* Plant info table */
+  .info-table { width: 100%; }
+  .info-table tr { border-bottom: 1px solid var(--border); }
+  .info-table tr:last-child { border-bottom: none; }
+  .info-table td {
+    padding: 9px 4px;
+    font-size: 0.8rem;
+    vertical-align: top;
+  }
+  .info-table td:first-child {
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    padding-right: 20px;
+    width: 1%;
+  }
+  .info-table td:last-child { color: var(--text); word-break: break-all; }
+
+  /* Status pill */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .status-pill .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  .status-online  { background: var(--green-dim); color: var(--green); }
+  .status-online .dot { background: var(--green); }
+  .status-offline { background: var(--red-dim);   color: var(--red); }
+  .status-offline .dot { background: var(--red); animation: none; }
+  .status-warning { background: var(--amber-glow); color: var(--amber); }
+  .status-warning .dot { background: var(--amber); }
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50%      { opacity: 0.3; }
+  }
+
+  /* ─── Chart section ──────────────────────────────────────────────── */
+  .chart-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .chart-controls .field {
+    margin-bottom: 0;
+    min-width: 120px;
+  }
+  .chart-controls label {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    margin-bottom: 5px;
+  }
+  .chart-controls select {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 7px 12px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .chart-controls select:focus { border-color: var(--amber); }
+
+  .chart-title {
+    font-weight: 800;
+    font-size: 1rem;
+    margin-right: auto;
+  }
+  .chart-subtitle {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* SVG Chart */
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+  }
+  #chart-svg {
+    display: block;
+    width: 100%;
+    min-height: 300px;
+  }
+  .chart-empty {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+  }
+  .chart-empty.show { display: block; }
+
+  /* Tooltip */
+  #chart-tooltip {
+    position: fixed;
+    background: var(--surface);
+    border: 1px solid var(--amber);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    pointer-events: none;
+    z-index: 100;
+    display: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 12px var(--amber-glow);
+    line-height: 1.6;
+  }
+  #chart-tooltip .tt-date { color: var(--text-dim); font-size: 0.65rem; margin-bottom: 4px; }
+  #chart-tooltip .tt-val { color: var(--amber); font-size: 1rem; font-weight: 700; }
+  #chart-tooltip .tt-unit { color: var(--text-dim); font-size: 0.7rem; margin-left: 3px; }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--amber);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Separator */
+  .sep { height: 1px; background: var(--border); margin: 28px 0; }
+
+  /* Loading overlay */
+  .loading-mask {
+    position: absolute;
+    inset: 0;
+    background: rgba(7,8,13,0.7);
+    border-radius: inherit;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--amber);
+    gap: 8px;
+    backdrop-filter: blur(2px);
+  }
+  .loading-mask.show { display: flex; }
+
+  /* Logout */
+  .top-bar {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .top-bar.show { display: flex; }
+  .session-info {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    flex: 1;
+  }
+  .session-info span { color: var(--amber); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="header">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="4" fill="#0a0800"/>
+        <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="#0a0800" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>ShineMonitor</h1>
+      <p>Power Station Intelligence Dashboard</p>
+    </div>
+    <div class="header-badge" id="auth-badge">● Live</div>
+  </header>
+
+  <!-- ── Top bar (shown after login) ───────────────────── -->
+  <div class="top-bar" id="top-bar">
+    <div class="session-info">
+      Logged in as <span id="session-usr">—</span> &nbsp;·&nbsp; Token expires <span id="session-exp">—</span>
+    </div>
+    <button class="btn btn-sm btn-ghost" onclick="logout()">Sign out</button>
+  </div>
+
+  <!-- ── Login panel ────────────────────────────────────── -->
+  <div id="login-panel" class="card">
+    <div class="card-label">API Credentials</div>
+    <h2>Connect to ShineMonitor</h2>
+    <p>Enter your platform credentials to authenticate and load your power station data.</p>
+
+    <div class="field">
+      <label>Username (usr)</label>
+      <input id="inp-usr" type="text" placeholder="e.g. vplant" value="vplant">
+    </div>
+    <div class="field">
+      <label>Password (pwd)</label>
+      <input id="inp-pwd" type="password" placeholder="Password" value="vplant">
+    </div>
+    <div class="field">
+      <label>Company Key</label>
+      <input id="inp-key" type="text" placeholder="e.g. 0123456789ABCDEF" value="0123456789ABCDEF">
+    </div>
+
+    <button class="btn" id="login-btn" onclick="doLogin()">Authenticate &amp; Connect</button>
+    <div class="alert" id="login-alert"></div>
+  </div>
+
+  <!-- ── Dashboard ──────────────────────────────────────── -->
+  <div id="dashboard">
+
+    <!-- Plant selector -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-label">Power Station</div>
+      <div class="selector-row">
+        <div class="field">
+          <label>Select plant</label>
+          <select id="plant-select" onchange="onPlantChange()">
+            <option value="">— loading plants —</option>
+          </select>
+        </div>
+        <button class="btn btn-sm" onclick="refreshDashboard()">↻ Refresh</button>
+      </div>
+      <div class="alert" id="dash-alert"></div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-grid">
+      <div class="stat-card" id="sc-today">
+        <div class="s-label">Today's Generation</div>
+        <div class="s-value" id="v-today">—<span class="s-unit">kWh</span></div>
+        <div class="s-sub" id="v-today-date">—</div>
+        <div class="s-glow"></div>
+        <div class="loading-mask" id="lm-today"><span class="spinner"></span>Loading</div>
+      </div>
+      <div class="stat-card" id="sc-month">
+        <div class="s-label">This Month's Generation</div>
+        <div class="s-value" id="v-month">—<span class="s-unit">kWh</span></div>
+        <div class="s-sub" id="v-month-label">—</div>
+        <div class="s-glow"></div>
+        <div class="loading-mask" id="lm-month"><span class="spinner"></span>Loading</div>
+      </div>
+      <div class="stat-card green" id="sc-power">
+        <div class="s-label">Active Output Power</div>
+        <div class="s-value" id="v-power">—<span class="s-unit">kW</span></div>
+        <div class="s-sub">Current output</div>
+        <div class="s-glow"></div>
+        <div class="loading-mask" id="lm-power"><span class="spinner"></span>Loading</div>
+      </div>
+      <div class="stat-card neutral" id="sc-status">
+        <div class="s-label">Station Status</div>
+        <div class="s-value" id="v-status" style="font-size:1rem;margin-top:4px;">—</div>
+        <div class="s-sub" id="v-status-devices">—</div>
+        <div class="s-glow"></div>
+      </div>
+    </div>
+
+    <!-- Plant info + chart period -->
+    <div class="two-col">
+      <div class="card" style="position:relative;">
+        <div class="card-label">Plant Details</div>
+        <table class="info-table" id="plant-info-table">
+          <tr><td>Name</td><td id="pi-name">—</td></tr>
+          <tr><td>Status</td><td id="pi-status">—</td></tr>
+          <tr><td>Country</td><td id="pi-country">—</td></tr>
+          <tr><td>City</td><td id="pi-city">—</td></tr>
+          <tr><td>Address</td><td id="pi-address">—</td></tr>
+          <tr><td>Timezone</td><td id="pi-timezone">—</td></tr>
+          <tr><td>Nominal Power</td><td id="pi-power">—</td></tr>
+          <tr><td>Installed</td><td id="pi-installed">—</td></tr>
+          <tr><td>Designer</td><td id="pi-designer">—</td></tr>
+          <tr><td>Currency</td><td id="pi-currency">—</td></tr>
+          <tr><td>Unit Profit</td><td id="pi-profit">—</td></tr>
+          <tr><td>Annual Target</td><td id="pi-target">—</td></tr>
+        </table>
+        <div class="loading-mask" id="lm-info"><span class="spinner"></span>Loading</div>
+      </div>
+
+      <!-- Energy chart card -->
+      <div class="card" style="position:relative;">
+        <div class="chart-controls">
+          <div>
+            <div class="chart-title">Daily Generation</div>
+            <div class="chart-subtitle">kWh per day — selected month</div>
+          </div>
+          <div>
+            <label>Month</label>
+            <select id="sel-month" onchange="loadChart()"></select>
+          </div>
+          <div>
+            <label>Year</label>
+            <select id="sel-year" onchange="loadChart()"></select>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <svg id="chart-svg" viewBox="0 0 860 300" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="chart-empty" id="chart-empty">No generation data for this period.</div>
+        </div>
+        <div class="loading-mask" id="lm-chart"><span class="spinner"></span>Fetching data</div>
+      </div>
+    </div>
+
+  </div><!-- /dashboard -->
+
+</div><!-- /shell -->
+
+<!-- Tooltip -->
+<div id="chart-tooltip">
+  <div class="tt-date" id="tt-date"></div>
+  <div><span class="tt-val" id="tt-val"></span><span class="tt-unit">kWh</span></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   CONFIGURATION
+═══════════════════════════════════════════════════════════════════════ */
+const BASE = 'http://api.shinemonitor.com/public/';
+
+/* ═══════════════════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════════════════ */
+let state = {
+  usr: '', secret: '', token: '', expiresAt: 0,
+  plants: [], currentPlant: null,
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CRYPTO — pure-JS SHA-1 (works on HTTP, file://, any context)
+   Based on RFC 3174 / public domain implementation
+═══════════════════════════════════════════════════════════════════════ */
+function sha1(str) {
+  // UTF-8 encode
+  const utf8 = unescape(encodeURIComponent(str));
+  const bytes = Array.from(utf8).map(c => c.charCodeAt(0));
+
+  // SHA-1 constants
+  const H = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0];
+
+  // Pre-processing: add padding
+  bytes.push(0x80);
+  while (bytes.length % 64 !== 56) bytes.push(0x00);
+  const bitLen = (utf8.length) * 8;
+  // Append original length as 64-bit big-endian
+  bytes.push(0,0,0,0);                          // high 32 bits (always 0 for our strings)
+  bytes.push((bitLen >>> 24) & 0xff, (bitLen >>> 16) & 0xff,
+             (bitLen >>>  8) & 0xff,  bitLen        & 0xff);
+
+  // Process each 512-bit (64-byte) chunk
+  for (let i = 0; i < bytes.length; i += 64) {
+    const w = new Array(80);
+    for (let j = 0; j < 16; j++) {
+      w[j] = (bytes[i+j*4]<<24)|(bytes[i+j*4+1]<<16)|(bytes[i+j*4+2]<<8)|bytes[i+j*4+3];
+    }
+    for (let j = 16; j < 80; j++) {
+      const x = w[j-3]^w[j-8]^w[j-14]^w[j-16];
+      w[j] = (x<<1)|(x>>>31);
+    }
+    let [a,b,c,d,e] = H;
+    for (let j = 0; j < 80; j++) {
+      let f, k;
+      if      (j < 20) { f=(b&c)|((~b)&d); k=0x5A827999; }
+      else if (j < 40) { f=b^c^d;          k=0x6ED9EBA1; }
+      else if (j < 60) { f=(b&c)|(b&d)|(c&d); k=0x8F1BBCDC; }
+      else             { f=b^c^d;          k=0xCA62C1D6; }
+      const tmp = (((a<<5)|(a>>>27)) + f + e + k + w[j]) >>> 0;
+      e=d; d=c; c=(b<<30)|(b>>>2); b=a; a=tmp;
+    }
+    H[0]=(H[0]+a)>>>0; H[1]=(H[1]+b)>>>0; H[2]=(H[2]+c)>>>0;
+    H[3]=(H[3]+d)>>>0; H[4]=(H[4]+e)>>>0;
+  }
+
+  return H.map(h => h.toString(16).padStart(8,'0')).join('');
+}
+
+// All calls are synchronous now — wrap in resolved promise for API compat
+function salt() { return String(Date.now()); }
+
+async function buildAuthSign(s, pwdSha1, usr, companyKey) {
+  const action = `&action=auth&usr=${usr}&company-key=${companyKey}`;
+  return sha1(s + pwdSha1 + action);
+}
+
+async function buildSign(s, secret, token, actionAndParams) {
+  return sha1(s + secret + token + actionAndParams);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   HTTP
+═══════════════════════════════════════════════════════════════════════ */
+async function apiGet(params) {
+  const qs = new URLSearchParams(params).toString();
+  const url = `${BASE}?${qs}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  if (data.err !== 0) {
+    const msg = data.desc || 'API error';
+    throw Object.assign(new Error(msg), { apiErr: data.err });
+  }
+  return data.dat || {};
+}
+
+async function signedGet(action, extra = {}) {
+  if (Date.now() / 1000 > state.expiresAt - 120) await doRefreshToken();
+  const s = salt();
+  let extraStr = '';
+  for (const [k, v] of Object.entries(extra)) {
+    extraStr += `&${k}=${encodeURIComponent(v)}`;
+  }
+  const actionAndParams = `&action=${action}${extraStr}`;
+  const sign = await buildSign(s, state.secret, state.token, actionAndParams);
+  const params = { sign, salt: s, token: state.token, action, ...extra };
+  return apiGet(params);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════════════════════════════ */
+async function doLogin() {
+  const usr = q('#inp-usr').value.trim();
+  const pwd = q('#inp-pwd').value;
+  const key = q('#inp-key').value.trim();
+  if (!usr || !pwd || !key) return showAlert('login-alert','err','Please fill in all fields.');
+
+  setBtnLoading('login-btn', true);
+  showAlert('login-alert','info','<span class="spinner"></span>Authenticating…');
+
+  try {
+    const s = salt();
+    const pwdSha1 = await sha1(pwd);
+    const sign = await buildAuthSign(s, pwdSha1, usr, key);
+    const data = await apiGet({ sign, salt: s, action: 'auth', usr, 'company-key': key });
+
+    state.usr     = usr;
+    state.secret  = data.secret;
+    state.token   = data.token;
+    state.expiresAt = Date.now() / 1000 + data.expire;
+
+    showAlert('login-alert','ok','✓ Authenticated successfully!');
+    setTimeout(showDashboard, 600);
+  } catch(e) {
+    showAlert('login-alert','err','✗ ' + e.message);
+  } finally {
+    setBtnLoading('login-btn', false);
+  }
+}
+
+async function doRefreshToken() {
+  const s = salt();
+  const actionAndParams = '&action=updateToken';
+  const sign = await buildSign(s, state.secret, state.token, actionAndParams);
+  const data = await apiGet({ sign, salt: s, token: state.token, action: 'updateToken' });
+  state.secret = data.secret;
+  state.token  = data.token;
+  state.expiresAt = Date.now() / 1000 + data.expire;
+}
+
+function logout() {
+  state = { usr:'', secret:'', token:'', expiresAt:0, plants:[], currentPlant:null };
+  q('#dashboard').classList.remove('show');
+  q('#login-panel').style.display = '';
+  q('#top-bar').classList.remove('show');
+  q('#auth-badge').classList.remove('show');
+  q('#login-alert').classList.remove('show');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DASHBOARD BOOTSTRAP
+═══════════════════════════════════════════════════════════════════════ */
+async function showDashboard() {
+  q('#login-panel').style.display = 'none';
+  q('#dashboard').classList.add('show');
+  q('#top-bar').classList.add('show');
+  q('#auth-badge').classList.add('show');
+  q('#session-usr').textContent = state.usr;
+  updateExpiry();
+  setInterval(updateExpiry, 30000);
+
+  buildMonthYearSelectors();
+  await loadPlants();
+}
+
+function updateExpiry() {
+  const diff = Math.max(0, state.expiresAt - Date.now()/1000);
+  const h = Math.floor(diff / 3600), m = Math.floor((diff % 3600) / 60);
+  q('#session-exp').textContent = `${h}h ${m}m`;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MONTH / YEAR SELECTORS (2022–2099)
+═══════════════════════════════════════════════════════════════════════ */
+const MONTHS = ['January','February','March','April','May','June',
+                'July','August','September','October','November','December'];
+
+function buildMonthYearSelectors() {
+  const now = new Date();
+  const mSel = q('#sel-month');
+  const ySel = q('#sel-year');
+
+  mSel.innerHTML = MONTHS.map((m,i) =>
+    `<option value="${String(i+1).padStart(2,'0')}" ${i===now.getMonth()?'selected':''}>${m}</option>`
+  ).join('');
+
+  let yearOpts = '';
+  for (let y = 2022; y <= 2099; y++) {
+    yearOpts += `<option value="${y}" ${y===now.getFullYear()?'selected':''}>${y}</option>`;
+  }
+  ySel.innerHTML = yearOpts;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PLANTS
+═══════════════════════════════════════════════════════════════════════ */
+async function loadPlants() {
+  try {
+    const data = await signedGet('queryPlants', { page: 0, pagesize: 50 });
+    state.plants = data.plant || [];
+    const sel = q('#plant-select');
+    if (state.plants.length === 0) {
+      sel.innerHTML = '<option value="">No plants found</option>';
+      return;
+    }
+    sel.innerHTML = state.plants.map(p =>
+      `<option value="${p.pid}">[${p.pid}] ${p.name}</option>`
+    ).join('');
+    await onPlantChange();
+  } catch(e) {
+    showAlert('dash-alert','err','Could not load plants: ' + e.message);
+  }
+}
+
+async function onPlantChange() {
+  const pid = parseInt(q('#plant-select').value);
+  if (!pid) return;
+  state.currentPlant = state.plants.find(p => p.pid === pid) || null;
+  await refreshDashboard();
+}
+
+async function refreshDashboard() {
+  const pid = parseInt(q('#plant-select').value);
+  if (!pid) return;
+  showAlert('dash-alert','','');
+  await Promise.all([
+    loadPlantInfo(pid),
+    loadToday(pid),
+    loadMonth(pid),
+    loadPower(pid),
+    loadChart(),
+  ]);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PLANT INFO
+═══════════════════════════════════════════════════════════════════════ */
+async function loadPlantInfo(pid) {
+  mask('lm-info', true);
+  try {
+    const d = await signedGet('queryPlantInfo', { plantid: pid });
+    const a = d.address || {};
+    const p = d.profit  || {};
+    const tz = a.timezone != null ? formatTZ(a.timezone) : '—';
+
+    setText('pi-name',     d.name || '—');
+    setText('pi-country',  a.country  || '—');
+    setText('pi-city',     [a.city, a.province].filter(Boolean).join(', ') || '—');
+    setText('pi-address',  a.address  || '—');
+    setText('pi-timezone', tz);
+    setText('pi-power',    d.nominalPower ? `${(d.nominalPower/1000).toFixed(1)} kW` : '—');
+    setText('pi-installed',d.install  ? d.install.split(' ')[0] : '—');
+    setText('pi-designer', d.designCompany || '—');
+    setText('pi-currency', p.currencyCountry || p.currency || '—');
+    setText('pi-profit',   p.unitProfit ? `${p.unitProfit} /kWh` : '—');
+    setText('pi-target',   d.energyYearEstimate ? `${fmt(d.energyYearEstimate)} kWh/yr` : '—');
+
+    // Status
+    const statusMap = {0:'online',1:'offline',4:'warning',7:'warning'};
+    const statusLbl = {0:'Online',1:'Offline',4:'Warning',7:'Attention'};
+    const cls = statusMap[d.status] || 'offline';
+    q('#pi-status').innerHTML =
+      `<span class="status-pill status-${cls}"><span class="dot"></span>${statusLbl[d.status] ?? d.status}</span>`;
+    q('#v-status').innerHTML =
+      `<span class="status-pill status-${cls}"><span class="dot"></span>${statusLbl[d.status] ?? d.status}</span>`;
+    setText('v-status-devices', `Plant ID: ${pid}`);
+  } catch(e) {
+    setText('pi-name', 'Error: ' + e.message);
+  } finally {
+    mask('lm-info', false);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ENERGY STATS
+═══════════════════════════════════════════════════════════════════════ */
+async function loadToday(pid) {
+  mask('lm-today', true);
+  const today = fmtDate(new Date());
+  try {
+    const d = await signedGet('queryPlantEnergyDay', { plantid: pid });
+    q('#v-today').innerHTML = `${fmt(d.energy)}<span class="s-unit">kWh</span>`;
+    setText('v-today-date', today);
+  } catch(e) {
+    q('#v-today').innerHTML = `<span style="color:var(--text-dim);font-size:1rem">No data</span>`;
+  } finally {
+    mask('lm-today', false);
+  }
+}
+
+async function loadMonth(pid) {
+  mask('lm-month', true);
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  try {
+    const d = await signedGet('queryPlantEnergyMonth', { plantid: pid, date: dateStr });
+    q('#v-month').innerHTML = `${fmt(d.energy)}<span class="s-unit">kWh</span>`;
+    setText('v-month-label', MONTHS[now.getMonth()] + ' ' + now.getFullYear());
+  } catch(e) {
+    q('#v-month').innerHTML = `<span style="color:var(--text-dim);font-size:1rem">No data</span>`;
+  } finally {
+    mask('lm-month', false);
+  }
+}
+
+async function loadPower(pid) {
+  mask('lm-power', true);
+  try {
+    const d = await signedGet('queryPlantActiveOuputPowerCurrent', { plantid: pid });
+    q('#v-power').innerHTML = `${fmt(d.outputPower)}<span class="s-unit">kW</span>`;
+  } catch(e) {
+    q('#v-power').innerHTML = `<span style="color:var(--text-dim);font-size:1rem">Offline</span>`;
+  } finally {
+    mask('lm-power', false);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CHART — daily generation for selected month
+═══════════════════════════════════════════════════════════════════════ */
+async function loadChart() {
+  const pid = parseInt(q('#plant-select').value);
+  if (!pid) return;
+
+  const month = q('#sel-month').value;
+  const year  = q('#sel-year').value;
+  const dateStr = `${year}-${month}`;
+
+  mask('lm-chart', true);
+  q('#chart-empty').classList.remove('show');
+
+  try {
+    const d = await signedGet('queryPlantEnergyMonthPerDay', { plantid: pid, date: dateStr });
+    const rows = d.perday || [];
+    if (!rows.length || rows.every(r => parseFloat(r.val) === 0)) {
+      q('#chart-empty').classList.add('show');
+      q('#chart-svg').innerHTML = '';
+    } else {
+      renderChart(rows, `${MONTHS[parseInt(month)-1]} ${year}`);
+    }
+  } catch(e) {
+    q('#chart-empty').classList.add('show');
+    q('#chart-svg').innerHTML = '';
+  } finally {
+    mask('lm-chart', false);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SVG BAR CHART
+═══════════════════════════════════════════════════════════════════════ */
+function renderChart(rows, label) {
+  const svg = q('#chart-svg');
+  const W = 860, H = 300;
+  const PAD = { top: 24, right: 20, bottom: 48, left: 56 };
+  const cW = W - PAD.left - PAD.right;
+  const cH = H - PAD.top  - PAD.bottom;
+
+  const values = rows.map(r => parseFloat(r.val) || 0);
+  const maxVal = Math.max(...values, 0.001);
+  const n = rows.length;
+  const barW = Math.max(4, (cW / n) - 4);
+  const step = cW / n;
+
+  // Nice Y axis ticks
+  const nTicks = 5;
+  const tickStep = niceNum(maxVal / nTicks, true);
+  const yMax = tickStep * Math.ceil(maxVal / tickStep) * 1.05;
+
+  // Gradient defs
+  let markup = `
+<defs>
+  <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%"   stop-color="#f6a01a" stop-opacity="1"/>
+    <stop offset="100%" stop-color="#b87310" stop-opacity="0.5"/>
+  </linearGradient>
+  <linearGradient id="barGradHover" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%"   stop-color="#fbbf24" stop-opacity="1"/>
+    <stop offset="100%" stop-color="#f6a01a" stop-opacity="0.8"/>
+  </linearGradient>
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>`;
+
+  // Grid lines & Y labels
+  for (let i = 0; i <= nTicks; i++) {
+    const v = tickStep * i;
+    if (v > yMax) break;
+    const y = PAD.top + cH - (v / yMax) * cH;
+    markup += `<line x1="${PAD.left}" y1="${y}" x2="${W - PAD.right}" y2="${y}"
+      stroke="#1f2437" stroke-width="1"/>`;
+    markup += `<text x="${PAD.left - 8}" y="${y + 4}"
+      fill="#6b738f" font-family="Space Mono,monospace" font-size="9"
+      text-anchor="end">${v.toFixed(v < 1 ? 3 : 1)}</text>`;
+  }
+
+  // Y axis label
+  markup += `<text x="12" y="${PAD.top + cH/2}"
+    fill="#6b738f" font-family="Space Mono,monospace" font-size="9"
+    text-anchor="middle" transform="rotate(-90, 12, ${PAD.top + cH/2})">kWh</text>`;
+
+  // Bars
+  rows.forEach((row, i) => {
+    const val = parseFloat(row.val) || 0;
+    const bH  = Math.max(2, (val / yMax) * cH);
+    const x   = PAD.left + i * step + (step - barW) / 2;
+    const y   = PAD.top + cH - bH;
+    const day = row.ts ? row.ts.split(' ')[0].split('-')[2] : String(i+1).padStart(2,'0');
+    const dateLabel = row.ts ? row.ts.split(' ')[0] : '';
+    const isToday = dateLabel === fmtDate(new Date());
+    const rx = Math.min(3, barW / 2);
+
+    markup += `
+<g class="bar-group" style="cursor:pointer"
+   onmouseenter="showTip(event,'${dateLabel}','${val}')"
+   onmouseleave="hideTip()">
+  <rect x="${x}" y="${y}" width="${barW}" height="${bH}"
+    rx="${rx}" fill="url(#barGrad)" opacity="${val === 0 ? 0.2 : 0.9}"
+    class="bar-rect" data-val="${val}" data-date="${dateLabel}"
+    style="transition:all 0.15s"/>
+  ${isToday ? `<rect x="${x-1}" y="${y-1}" width="${barW+2}" height="${bH+1}"
+    rx="${rx}" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity="0.6"/>` : ''}
+</g>`;
+
+    // X labels — only every other day if many bars
+    if (n <= 31 && (n <= 15 || i % 2 === 0 || i === n-1)) {
+      markup += `<text x="${x + barW/2}" y="${H - PAD.bottom + 16}"
+        fill="${isToday ? '#f6a01a' : '#6b738f'}"
+        font-family="Space Mono,monospace" font-size="8"
+        font-weight="${isToday ? '700' : '400'}"
+        text-anchor="middle">${day}</text>`;
+    }
+  });
+
+  // Baseline
+  const baseY = PAD.top + cH;
+  markup += `<line x1="${PAD.left}" y1="${baseY}" x2="${W - PAD.right}" y2="${baseY}"
+    stroke="#2a3050" stroke-width="1"/>`;
+
+  svg.innerHTML = markup;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  // Hover effect via JS since SVG :hover on rects is inconsistent
+  svg.querySelectorAll('.bar-rect').forEach(rect => {
+    rect.addEventListener('mouseenter', () => {
+      rect.setAttribute('fill', 'url(#barGradHover)');
+      rect.setAttribute('filter', 'url(#glow)');
+      rect.setAttribute('opacity', '1');
+    });
+    rect.addEventListener('mouseleave', () => {
+      rect.setAttribute('fill', 'url(#barGrad)');
+      rect.removeAttribute('filter');
+      const v = parseFloat(rect.dataset.val);
+      rect.setAttribute('opacity', v === 0 ? '0.2' : '0.9');
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   TOOLTIP
+═══════════════════════════════════════════════════════════════════════ */
+function showTip(e, date, val) {
+  const tt = q('#chart-tooltip');
+  q('#tt-date').textContent = date;
+  q('#tt-val').textContent = parseFloat(val).toFixed(4);
+  tt.style.display = 'block';
+  moveTip(e);
+}
+function hideTip() { q('#chart-tooltip').style.display = 'none'; }
+document.addEventListener('mousemove', e => {
+  const tt = q('#chart-tooltip');
+  if (tt.style.display === 'block') moveTip(e);
+});
+function moveTip(e) {
+  const tt = q('#chart-tooltip');
+  const x = e.clientX + 16, y = e.clientY - 40;
+  tt.style.left = Math.min(x, window.innerWidth - 160) + 'px';
+  tt.style.top  = Math.max(y, 10) + 'px';
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════════════════════════════ */
+function q(sel) { return document.querySelector(sel); }
+function setText(id, txt) { const el = document.getElementById(id); if(el) el.textContent = txt; }
+function mask(id, show) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('show', show);
+}
+function showAlert(id, type, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'alert' + (type ? ` ${type} show` : '');
+  el.innerHTML = msg;
+}
+function setBtnLoading(id, on) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.disabled = on;
+  btn.textContent = on ? 'Authenticating…' : 'Authenticate & Connect';
+}
+function fmt(v) {
+  const n = parseFloat(v);
+  if (isNaN(n)) return '—';
+  return n >= 1000 ? (n/1000).toFixed(2) + 'M'.replace('M', n >= 1e6 ? ' M' : '') : n.toFixed(4);
+}
+function fmtDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function formatTZ(secs) {
+  const h = secs / 3600;
+  return h >= 0 ? `UTC+${h}` : `UTC${h}`;
+}
+function niceNum(x, round) {
+  const exp = Math.floor(Math.log10(x));
+  const f = x / Math.pow(10, exp);
+  let nf;
+  if (round) { nf = f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10; }
+  else { nf = f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10; }
+  return nf * Math.pow(10, exp);
+}
+
+/* Allow pressing Enter in credentials fields */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-panel').style.display !== 'none') {
+    doLogin();
+  }
+});
+</script>
+</body>
+</html>
