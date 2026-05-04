@@ -32,8 +32,9 @@ sudo dnf group install "libreoffice" -y
 
 # for postgresql buildfarm
 sudo dnf builddep postgresql -y
-sudo dnf install -y perl-FindBin perl-IPC-Run perl-LWP-Protocol-https \
-perl-Opcode perl-Test-Simple tcl-devel tk-devel
+sudo dnf install -y clang clang-tools-extra llvm-devel numactl-devel \
+perl-FindBin perl-IPC-Run perl-LWP-Protocol-https perl-Test-Simple \
+perl-OpCode libcurl-devel liburing-devel tcl-devel tk-devel
 
 
 # fedora packaging stuff
