@@ -31,3 +31,7 @@
 # Debug files
 *.dSYM/
 *.su
+
+# local files
+shinemonitor_api_rosset.py
+
