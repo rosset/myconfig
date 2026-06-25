@@ -38,8 +38,10 @@ perl-OpCode libcurl-devel liburing-devel tcl-devel tk-devel
 
 
 # fedora packaging stuff
-sudo dnf install -y cmake fedora-easy-karma fedora-packager meson nosync \
-python3-rpkg rpkg rpkg-common rpkg-macros valgrind
+sudo dnf install -y cmake ccache fedora-easy-karma meson nosync python3-rpkg \
+rpkg rpkg-common rpkg-macros sccache valgrind
+
+sudo dnf install -y fedora-active-user fedora-packager fedrq -y
 
 
 # debug tools
@@ -48,10 +50,6 @@ sudo kdumpctl reset-crashkernel
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 sudo systemctl enable kdump --now
 sudo kdumpctl status
-
-
-# optional
-# sudo dnf install kernel-debug* -y
 
 
 # remove unused packages
