@@ -41,7 +41,7 @@ perl-OpCode libcurl-devel liburing-devel tcl-devel tk-devel
 sudo dnf install -y cmake ccache fedora-easy-karma meson nosync python3-rpkg \
 rpkg rpkg-common rpkg-macros sccache valgrind
 
-sudo dnf install -y fedora-active-user fedora-packager fedrq -y
+sudo dnf install -y fedora-active-user fedora-packager fedrq rpmdevtools -y
 
 
 # debug tools
