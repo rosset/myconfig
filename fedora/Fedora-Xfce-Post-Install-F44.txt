@@ -36,6 +36,14 @@ sudo dnf install -y clang clang-tools-extra llvm-devel numactl-devel \
 perl-FindBin perl-IPC-Run perl-LWP-Protocol-https perl-Test-Simple \
 perl-Opcode libcurl-devel liburing-devel tcl-devel tk-devel
 
+sudo dnf install -y ninja-build meson avahi-compat-libdns_sd-devel \
+        lz4-devel \
+        libzstd-devel \
+        libselinux-devel \
+        systemd-devel \
+        pam-devel \
+        uuid-devel
+
 
 # fedora packaging stuff
 sudo dnf install -y cmake ccache fedora-easy-karma meson ninja-build \
