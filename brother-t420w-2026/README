@@ -1,0 +1,68 @@
+#
+# https://github.com/rosset/myconfig/brother-t420w-2026
+#
+
+                         ┌───────────────────────┐
+                         │   Brother DCP-T420W   │
+                         │  (final architecture) │
+                         │   IPP / PWG-Raster    │
+                         └──────────▲────────────┘
+                                    │
+                         ┌──────────┴───────────┐
+                         │      Network / IPP    │
+                         └──────────▲───────────┘
+                                    │
+              ┌─────────────────────┴─────────────────────┐
+              │                                           │
+    Linux / Raspberry Pi 5                         macOS 27 Golden Gate
+        aarch64                                       IPP Everywhere
+              │                                           │
+        CUPS + PPD                                      CUPS
+              │                                           │
+      br-box64-filter                                driver=everywhere
+              │
+            box64
+              │
+    Brother x86_64 filter
+              │
+       HBP / PWG-Raster
+              │
+              └───────────────────────► Printer
+
+# Linux
+# Printer Brother_T420W running with Linux (aarch64) + box64 + cups filter + modified ppd
+# Status: working
+
+=> uncompress opt-brother.tar.gz to /opt - final path = /opt/brother
+
+=> copy /opt/brother/br-box64-filter to /usr/lib/cups/filter/br-box64-filter
+    * make sure it is executable: chmod +x /usr/lib/cups/filter/br-box64-filter
+    * this filter is a wrapper for the Brother LPD filter, which is a x86_64 binary
+    * it uses box64 to run the x86_64 binary on aarch64 (rpi5 in my case)
+    * if you try to use ./lpd/x86_64/brdcpt420wfilter directly, it will fail with "wrong architecture" error
+    * DietPi v10.6.2 (Debian 13.6) + [BOX64] Box64 with Dynarec v0.3.4 nogit built on Apr 24 2025 09:54:47
+    * the "key" thing is to keep the A4 Geometry: 2480x3508 (some wrappers are changing it to 2480x3507, which is wrong)
+    
+=> key files under /opt/brother:
+    - /opt/brother/Printers/dcpt420w/inf/brdcpt420wrc
+        -changed PageSize=Letter to PageSize=A4
+
+    - /opt/brother/Printers/dcpt420w/cupswrapper/brother_dcpt420w_printer_en.ppd
+        - changed from *cupsFilter: "application/vnd.cups-postscript 0 brother_lpdwrapper_dcpt420w"
+            - to.      *cupsFilter: "application/pdf 0 br-box64-filter"
+
+    - copy /opt/brother/Printers/dcpt420w/cupswrapper/brother_dcpt420w_printer_en.ppd
+        to /etc/cups/ppd/Brother_T420W.ppd
+    
+    - finally add the printer:
+        lpadmin -p Brother_T420W -E -v ipp://printer-IP:631/ipp/print -P /etc/cups/ppd/Brother_T420W.ppd
+
+
+# macOS 27 Golden Gate
+# Printer Brother_T420W with CUPS + IPP Everywhere
+# Kind: DCP-T420W - IPP Everywhere
+# Driver version: 2.3
+# Status: working
+
+lpadmin -p Brother_T420W -E -v "ipp://printer-IP/ipp/print" -m everywhere
+
