@@ -66,3 +66,37 @@
 
 lpadmin -p Brother_T420W -E -v "ipp://printer-IP/ipp/print" -m everywhere
 
+
+
+# V2 => Easiest path for Linux aarch64, avoid use of box64 and Brother
+# x86_64 filter, use IPP (no everywhere) driverless printing instead
+#
+# Brother_T420W
+#    → Brother proprietary LPD + box64
+#    → maximum Brother specific compatibility
+
+# Brother_T420W_IPP
+#    → native CUPS driverless
+#    → PWG Raster over IPP
+#    → no x86_64 emulation
+
+driverless \
+    ipp://printer-IP:631/ipp/print \
+    > /tmp/brother-ipp/dcp-t420w.ppd
+
+sed -i 's/\*DefaultPageSize: Letter/*DefaultPageSize: A4/' \
+    /tmp/brother-ipp/dcp-t420w.ppd
+
+lpadmin \
+    -p Brother_T420W_IPP \
+    -E \
+    -v ipp://printer-IP:631/ipp/print \
+    -P /tmp/brother-ipp/dcp-t420w.ppd
+
+cupsenable Brother_T420W_IPP
+cupsaccept Brother_T420W_IPP
+
+lpstat -v
+lpstat -p Brother_T420W_IPP -l
+
+
