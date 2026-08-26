@@ -38,8 +38,8 @@ perl-Opcode libcurl-devel liburing-devel tcl-devel tk-devel
 
 
 # fedora packaging stuff
-sudo dnf install -y cmake ccache fedora-easy-karma meson nosync python3-rpkg \
-rpkg rpkg-common rpkg-macros sccache valgrind
+sudo dnf install -y cmake ccache fedora-easy-karma meson ninja-build \
+nosync python3-rpkg rpkg rpkg-common rpkg-macros sccache valgrind
 
 sudo dnf install -y fedora-active-user fedora-packager fedrq rpmdevtools -y
 
