@@ -1,0 +1,70 @@
+
+
+
+
+# Fedora-45-Xfce-Post-Install-Commands by rosset
+
+
+# enable sshd
+sudo systemctl enable sshd --now
+
+
+# install my stuff
+sudo dnf install -y \
+cabextract calibre curl default-editor dkms filezilla fontconfig git gitk    \
+htop iotop libreoffice-writer lzop nosync qbittorrent redshift redshift-gtk  \
+rtorrent screen sysstat tig tmux unrar unzip vim-default-editor vim-enhanced \
+vlc wget wireshark wireshark-cli xorg-x11-font-utils zstd
+
+
+# update your fresh installation
+sudo dnf update -y
+sudo reboot
+
+
+# install dev packages & group packages
+sudo dnf group install -y "c-development"
+sudo dnf group install -y "cloud-infrastructure"
+sudo dnf group install -y "cloud-management"
+sudo dnf group install -y "container-management"
+sudo dnf group install -y "development-tools"
+sudo dnf group install -y "rpm-development-tools"
+sudo dnf group install -y "system-tools"
+sudo dnf group install "libreoffice" -y
+
+
+# for postgresql buildfarm
+sudo dnf builddep postgresql -y
+sudo dnf install -y clang clang-tools-extra llvm-devel numactl-devel \
+perl-FindBin perl-IPC-Run perl-LWP-Protocol-https perl-Test-Simple \
+perl-Opcode libcurl-devel liburing-devel tcl-devel tk-devel
+
+sudo dnf install -y ninja-build meson avahi-compat-libdns_sd-devel \
+        lz4-devel \
+        libzstd-devel \
+        libselinux-devel \
+        systemd-devel \
+        pam-devel \
+        uuid-devel
+
+
+# fedora packaging stuff
+sudo dnf install -y cmake ccache fedora-easy-karma meson ninja-build \
+nosync python3-rpkg rpkg rpkg-common rpkg-macros sccache valgrind
+
+sudo dnf install -y fedora-active-user fedora-packager fedrq rpmdevtools -y
+
+
+# debug tools
+sudo dnf install crash kexec-tools kdump-utils -y
+sudo kdumpctl reset-crashkernel
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+sudo systemctl enable kdump --now
+sudo kdumpctl status
+
+
+# remove unused packages
+# sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora* *pragh* \
+# *asunder* *xfburn* *xfdash* *parole* nano-default-editor orca
+
+
