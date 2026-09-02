@@ -1,8 +1,10 @@
 
-
-
-
 # Fedora-45-Xfce-Post-Install-Commands by rosset
+# Packaged RPM repository configurations move to /usr/share/dnf5/repos.d
+# In case of an upgrade:
+sudo dnf upgrade --refresh
+sudo dnf system-upgrade download --releasever=45 (or rawhide)
+sudo dnf offline reboot
 
 
 # enable sshd
@@ -66,5 +68,11 @@ sudo kdumpctl status
 # remove unused packages
 # sudo dnf remove -y *gnumeric* *abiword* *claws* *leafpad* *dragora* *pragh* \
 # *asunder* *xfburn* *xfdash* *parole* nano-default-editor orca
+
+# Post-Install "cleanup"
+
+sudo dnf install rpmconf -y
+
+sudo rpmconf -a
 
 
