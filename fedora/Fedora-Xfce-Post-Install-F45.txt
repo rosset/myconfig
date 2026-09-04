@@ -9,6 +9,7 @@ sudo dnf offline reboot
 
 # enable sshd
 sudo systemctl enable sshd --now
+sudo systemctl enable --now fstrim.timer
 
 
 # install my stuff
@@ -17,11 +18,6 @@ cabextract calibre curl default-editor dkms filezilla fontconfig git gitk    \
 htop iotop libreoffice-writer lzop nosync qbittorrent redshift redshift-gtk  \
 rtorrent screen sysstat tig tmux unrar unzip vim-default-editor vim-enhanced \
 vlc wget wireshark wireshark-cli xorg-x11-font-utils zstd
-
-
-# update your fresh installation
-sudo dnf update -y
-sudo reboot
 
 
 # install dev packages & group packages
@@ -70,9 +66,12 @@ sudo kdumpctl status
 # *asunder* *xfburn* *xfdash* *parole* nano-default-editor orca
 
 # Post-Install "cleanup"
-
 sudo dnf install rpmconf -y
-
 sudo rpmconf -a
 
+sudo fstrim -v /
+
+# update your fresh installation
+sudo dnf update -y
+sudo reboot
 
