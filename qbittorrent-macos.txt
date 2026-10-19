@@ -1,0 +1,12 @@
+# build steps qbittorrent + macos goldengate + MPB M4
+
+brew install qt libtorrent-rasterbar 
+
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=TRUE -DCMAKE_C_FLAGS="-O3 -mcpu=apple-m4" -DCMAKE_CXX_FLAGS="-O3 -mcpu=apple-m4"
+
+cmake --build build -j$(sysctl -n hw.ncpu)
+
+/opt/homebrew/opt/qt/bin/macdeployqt build/qbittorrent.app -verbose=1
+
+cp -R build/qbittorrent.app /Applications/qBittorrentEE
+
