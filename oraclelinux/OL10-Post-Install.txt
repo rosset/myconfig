@@ -7,7 +7,7 @@ sudo systemctl enable sshd --now
 
 # install my stuff
 sudo dnf install -y cabextract curl dkms filezilla fontconfig git gitk htop    \
-iotop screen sysstat tig tmux unrar unzip vim-enhanced wget2 wireshark         \
+iotop screen sysstat tig tmux unrar unzip vim-enhanced wget2 wireshark tig     \
 wireshark-cli xorg-x11-font-utils zstd
 
 
@@ -32,6 +32,15 @@ perl-Test-Simple uuid-devel
 # fedora packaging stuff
 sudo dnf install -y cmake meson python3-rpkg rpkg-common valgrind
 
+sudo dnf install -y fedora-packager fedora-packager-kerberos
+
+# PCP + Cockpit
+sudo dnf install -y pcp pcp-system-tools pcp-gui
+sudo dnf config-manager --enable ol10_addons
+sudo dnf install -y pcp-oracle-conf
+sudo systemctl enable pmcd pmlogger
+sudo systemctl restart pmcd
+sudo systemctl restart pmlogger
 
 # debug tools
 sudo dnf install crash kexec-tools -y
@@ -40,6 +49,8 @@ sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 sudo systemctl enable kdump --now
 sudo kdumpctl status
 
+# configure ~/.fedora.upn
+# configure ~/.config/rpkg/fedpkg.conf
 
 # optional
 # sudo dnf install kernel-debug* -y
